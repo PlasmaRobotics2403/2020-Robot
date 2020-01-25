@@ -1,5 +1,9 @@
 package frc.robot;
 
+import com.revrobotics.ColorMatch;
+
+import edu.wpi.first.wpilibj.util.Color;
+
 public class Constants {
     /* front of robot has electronics */
 	/* right & left sides from robot's perspective */
@@ -47,6 +51,12 @@ public class Constants {
 
 	/* TURRET CONSTANTS */
 	public static final double MAX_TURRET_SPEED = 1; 
+
+	/* CONTROL PANEL CONSTANTS */
+	public final static Color BLUE_TARGET = ColorMatch.makeColor(0.143, 0.427, 0.429);
+	public final static Color GREEN_TARGET = ColorMatch.makeColor(0.197, 0.561, 0.240);
+	public final static Color RED_TARGET = ColorMatch.makeColor(0.561, 0.232, 0.114);
+	public final static Color YELLOW_TARGET = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
 	/* VISION CONSTANTS */
 	public static final double CAMERA_HEIGHT = 24; //inches

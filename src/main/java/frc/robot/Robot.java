@@ -7,9 +7,6 @@
 
 package frc.robot;
 
-import frc.robot.auto.modes.*;
-import frc.robot.auto.util.*;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -36,6 +33,7 @@ public class Robot extends TimedRobot {
   Shooter shooter;
   Intake intake;
   Turret turret;
+  ControlPanel controlPanel;
 
   NetworkTable table;
   NetworkTableEntry tx;
@@ -62,6 +60,7 @@ public class Robot extends TimedRobot {
     driveTrain = new Drive(Constants.L_DRIVE_ID, Constants.L_DRIVE_SLAVE_ID, Constants.R_DRIVE_ID, Constants.R_DRIVE_SLAVE_ID);
     //shooter = new Shooter(Constants.SHOOTER_MOTOR_A_ID, Constants.SHOOTER_MOTOR_B_ID);
     turret = new Turret(Constants.TURRET_MOTOR_ID);
+    controlPanel = new ControlPanel();
 
     driveTrain.resetEncoders();
     driveTrain.zeroGyro();
@@ -154,6 +153,10 @@ public class Robot extends TimedRobot {
 
     if(joystick.Y.isPressed()) {
       visionTurretLineUp();
+    }
+
+    if(joystick.X.isPressed()) {
+      controlPanel.detectColor();
     }
   }
 
