@@ -47,7 +47,7 @@ public class Constants {
 	public static final double DRIVE_ENCODER_CONVERSION = 0.004665594;
 
 	/* SHOOTER CONSTANTS */
-	public static final double MAX_SHOOTER_SPEED = 0.50;
+	public static final double MAX_SHOOTER_SPEED = 1;
 
 	/* TURRET CONSTANTS */
 	public static final double MAX_TURRET_SPEED = 1; 

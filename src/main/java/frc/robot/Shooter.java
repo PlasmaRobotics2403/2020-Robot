@@ -27,8 +27,8 @@ public class Shooter {
     void shoot() {
         double speed = Constants.MAX_SHOOTER_SPEED;
 
-        motorA.set(ControlMode.PercentOutput, speed);
-        motorB.set(ControlMode.PercentOutput, speed);
+        motorA.set(ControlMode.PercentOutput, -speed); 
+        motorB.set(ControlMode.PercentOutput, -speed);
     }
 
     void stop() {
