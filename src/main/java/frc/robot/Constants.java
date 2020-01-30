@@ -17,8 +17,8 @@ public class Constants {
 	public static final int L_DRIVE_ID = 3; // left side motor farthest from talons
 	public static final int L_DRIVE_SLAVE_ID = 4; //
 	
-	//public static final int SHOOTER_MOTOR_A_ID = 7;
-	//public static final int SHOOTER_MOTOR_B_ID = 8; 
+	public static final int SHOOTER_MOTOR_A_ID = 9;
+	public static final int SHOOTER_MOTOR_B_ID = 8; 
 	
 	public static final int TURRET_MOTOR_ID = 3;
 	
@@ -47,7 +47,7 @@ public class Constants {
 	public static final double DRIVE_ENCODER_CONVERSION = 0.004665594;
 
 	/* SHOOTER CONSTANTS */
-	public static final double MAX_SHOOTER_SPEED = 1;
+	public static final double MAX_SHOOTER_SPEED = 0.50;
 
 	/* TURRET CONSTANTS */
 	public static final double MAX_TURRET_SPEED = 1; 

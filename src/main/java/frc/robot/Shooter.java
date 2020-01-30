@@ -1,19 +1,20 @@
 package frc.robot;
 
-import frc.robot.controllers.PlasmaTrigger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 public class Shooter {
-    TalonSRX motorA;
-    TalonSRX motorB;
+    TalonFX motorA;
+    TalonFX motorB;
 
     double speed;
 
     Shooter(int motor_A_ID, int motor_B_ID) {
-        motorA = new TalonSRX(motor_A_ID);
-        motorB = new TalonSRX(motor_B_ID);
+        motorA = new TalonFX(motor_A_ID);
+        motorB = new TalonFX(motor_B_ID);
 
         limitCurrent(motorA);
         limitCurrent(motorB);
@@ -23,19 +24,19 @@ public class Shooter {
 
     };
 
-    void shoot(PlasmaTrigger trigger) {
-        double speed = trigger.getFilteredAxis();
-        //speed *= Constants.MAX_SHOOTER_SPEED;
+    void shoot() {
+        double speed = Constants.MAX_SHOOTER_SPEED;
 
         motorA.set(ControlMode.PercentOutput, speed);
         motorB.set(ControlMode.PercentOutput, speed);
     }
 
-    public void limitCurrent(TalonSRX talon) {
-        talon.configPeakCurrentDuration(0, 1000);
-        talon.configPeakCurrentLimit(45, 1000);
-        talon.configContinuousCurrentLimit(45, 1000);
-        talon.enableCurrentLimit(true);
-        talon.configClosedloopRamp(1);
+    void stop() {
+        motorA.set(ControlMode.PercentOutput, 0);
+        motorB.set(ControlMode.PercentOutput, 0);
+    }
+
+    public void limitCurrent(TalonFX talon) {
+        talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(), 1000);
     }
 };
