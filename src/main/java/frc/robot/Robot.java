@@ -150,6 +150,13 @@ public class Robot extends TimedRobot {
       shooter.stop();
     }
 
+    if (joystick.RB.isPressed()){
+      shooter.extendHood();
+    }
+    if(joystick.X.isPressed()){
+      shooter.retractHood();
+    }
+
     if (joystick.A.isPressed()) {
       turret.turn(1);
     } else if (joystick.B.isPressed()) {
@@ -162,9 +169,9 @@ public class Robot extends TimedRobot {
       visionTurretLineUp(); 
     }
       
-    if(joystick.X.isPressed()) { 
+    /*if(joystick.X.isPressed()) { 
       controlPanel.detectColor(); 
-    }
+    }*/
   }
 
   public void visionLineUp() {
