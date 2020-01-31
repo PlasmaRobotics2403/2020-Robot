@@ -153,7 +153,7 @@ public class Robot extends TimedRobot {
     if (joystick.RB.isPressed()){
       shooter.extendHood();
     }
-    if(joystick.X.isPressed()){
+    if (joystick.X.isPressed()){
       shooter.retractHood();
     }
 

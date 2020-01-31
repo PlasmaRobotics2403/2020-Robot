@@ -16,8 +16,8 @@ public class Shooter {
 
     double speed;
 
-    private DoubleSolenoid leftSolenoid = new DoubleSolenoid(0, 1); // 1, 0
-    private DoubleSolenoid rightSolenoid = new DoubleSolenoid(2, 3); // 3, 2
+    private DoubleSolenoid leftSolenoid = new DoubleSolenoid(0, 1);
+    private DoubleSolenoid rightSolenoid = new DoubleSolenoid(2, 3);
 
     Shooter(int motor_A_ID, int motor_B_ID) {
         motorA = new TalonFX(motor_A_ID);
