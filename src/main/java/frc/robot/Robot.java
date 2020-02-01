@@ -94,10 +94,26 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("LimelightY", vision_Y);
     SmartDashboard.putNumber("LimelightArea", vision_Area);
 
-    distance = (Constants.OUTERPORT_HEIGHT - Constants.CAMERA_HEIGHT)
-        / Math.tan(Math.toRadians(vision_Y) + Math.toRadians(Constants.CAMERA_ANGLE));
-    distance /= 12; // convert from inches to feet
+    if(table.getEntry("getpipe").getDouble(0) == 2) {
+      SmartDashboard.putString("Camera Mode", "driver camera");
+    }
+    else if(table.getEntry("getpipe").getDouble(0) == 1) {
+      SmartDashboard.putString("Camera Mode", "x2 Zoom");
+    }
+    else {
+      SmartDashboard.putString("Camera Mode", "x1 Zoom");
+    }
 
+    // x2 hardware zoom camera feed
+    if(table.getEntry("getpipe").getDouble(0) == 1) {
+      distance = (Constants.OUTERPORT_HEIGHT - Constants.CAMERA_HEIGHT) / Math.tan(Math.toRadians(vision_Y) + Math.toRadians(Constants.CAMERA_ANGLE));
+      distance /= 12; // convert from inches to feet
+    }
+    else {
+      distance = (Constants.OUTERPORT_HEIGHT - Constants.CAMERA_HEIGHT) / Math.tan(Math.toRadians(vision_Y) + Math.toRadians(Constants.CAMERA_ANGLE));
+      distance /= 12; // convert from inches to feet 
+    }
+    
     SmartDashboard.putNumber("Distance", distance);
   }
 

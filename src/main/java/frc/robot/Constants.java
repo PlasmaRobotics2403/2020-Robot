@@ -59,9 +59,9 @@ public class Constants {
 	public final static Color YELLOW_TARGET = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
 	/* VISION CONSTANTS */
-	public static final double CAMERA_HEIGHT = 24; //inches
-	public static final double CAMERA_ANGLE = -5; //degrees
-	public static final double OUTERPORT_HEIGHT = 89; //inches
+	public static final double CAMERA_HEIGHT = 25.625; //inches
+	public static final double CAMERA_ANGLE = -2.7; //degrees
+	public static final double OUTERPORT_HEIGHT = 32; // 89 inches
 
 	/* TALON CONFIG CONSTANTS */
 	public static final int TALON_TIMEOUT = 30;
