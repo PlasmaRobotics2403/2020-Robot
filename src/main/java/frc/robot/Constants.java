@@ -20,7 +20,7 @@ public class Constants {
 	public static final int SHOOTER_MOTOR_A_ID = 9;
 	public static final int SHOOTER_MOTOR_B_ID = 8; 
 	
-	public static final int TURRET_MOTOR_ID = 3;
+	public static final int TURRET_MOTOR_ID = 10;
 	
 	
 	/*public static final int R_ELEVATOR_ID = 7;
