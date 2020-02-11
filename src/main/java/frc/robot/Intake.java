@@ -6,24 +6,29 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class Intake {
-    TalonSRX motorA;
-    TalonSRX motorB;
+    TalonSRX intakeMotor;
+    TalonSRX indexerMotor;
 
     double speed;
 
-    Intake(int motor_A_ID, int motor_B_ID) {
-        motorA = new TalonSRX(motor_A_ID);
-        motorB = new TalonSRX(motor_B_ID);
+    Intake(int intake_motor_ID, int indexer_motor_ID) {
+        intakeMotor = new TalonSRX(intake_motor_ID);
+        indexerMotor = new TalonSRX(indexer_motor_ID);
 
-        limitCurrent(motorA);
-        limitCurrent(motorB);
+        limitCurrent(intakeMotor);
+        limitCurrent(indexerMotor);
     };
 
     void intakeBall(PlasmaTrigger trigger) {
         double speed = trigger.getFilteredAxis();
 
-        motorA.set(ControlMode.PercentOutput, speed);
-        motorB.set(ControlMode.PercentOutput, speed);
+        intakeMotor.set(ControlMode.PercentOutput, speed);
+    }
+
+    void indexBall(double speed){
+        double indexSpeed = speed * Constants.MAX_INDEX_SPEED;
+
+        indexerMotor.set(ControlMode.PercentOutput, indexSpeed);
     }
 
     public void limitCurrent(TalonSRX talon) {

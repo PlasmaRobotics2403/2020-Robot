@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 import frc.robot.controllers.PlasmaJoystick;
 
-import java.util.concurrent.TimeUnit;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -31,7 +29,7 @@ public class Robot extends TimedRobot {
 
   PlasmaJoystick joystick;
   Drive driveTrain;
-  Shooter shooter;
+  //Shooter shooter;
   Intake intake;
   Turret turret;
   ControlPanel controlPanel;
@@ -58,11 +56,16 @@ public class Robot extends TimedRobot {
 
     joystick = new PlasmaJoystick(Constants.JOYSTICK1_PORT);
 
-    driveTrain = new Drive(Constants.L_DRIVE_ID, Constants.L_DRIVE_SLAVE_ID, Constants.R_DRIVE_ID,
-        Constants.R_DRIVE_SLAVE_ID);
-    shooter = new Shooter(Constants.SHOOTER_MOTOR_A_ID,
-                          Constants.SHOOTER_MOTOR_B_ID);
+    driveTrain = new Drive(Constants.L_DRIVE_ID, Constants.L_DRIVE_SLAVE_ID, Constants.R_DRIVE_ID, Constants.R_DRIVE_SLAVE_ID);
+
+    //shooter = new Shooter(Constants.SHOOTER_MOTOR_A_ID,
+     //                      Constants.SHOOTER_MOTOR_B_ID);
+
     turret = new Turret(Constants.TURRET_MOTOR_ID);
+
+    intake = new Intake(Constants.INTAKE_ID,
+                        Constants.INDEXER_ID);
+
     controlPanel = new ControlPanel();
 
     driveTrain.resetEncoders();
@@ -160,17 +163,26 @@ public class Robot extends TimedRobot {
 
   public void driverControls(final PlasmaJoystick joystick) {
     driveTrain.FPSDrive(joystick.LeftY, joystick.RightX);
-    if (joystick.LB.isPressed()) {
-      shooter.shoot();
+    intake.intakeBall(joystick.RT);
+
+    if (joystick.LT.isOffToOn()) {
+      //shooter.shoot();
     } else {
-      shooter.stop();
+      //shooter.stop();
     }
 
-    if (joystick.RB.isPressed()){
-      shooter.extendHood();
+    if(joystick.RB.isPressed()) {
+      intake.indexBall(1);
     }
-    if (joystick.X.isPressed()){
-      shooter.retractHood();
+    else{
+      intake.indexBall(0);
+    }
+
+    if (joystick.START.isPressed()){
+      //shooter.extendHood();
+    }
+    if (joystick.BACK.isPressed()){
+      //shooter.retractHood();
     }
 
     if (joystick.A.isPressed()) {
@@ -183,6 +195,10 @@ public class Robot extends TimedRobot {
  
     if(joystick.Y.isPressed()) { 
       visionTurretLineUp(); 
+    }
+
+    if(joystick.X.isPressed()) {
+      driveTrain.spinMotor();
     }
       
     /*if(joystick.X.isPressed()) { 

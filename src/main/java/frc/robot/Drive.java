@@ -64,7 +64,8 @@ public class Drive {
 		  leftDrive.config_kP(0, 1.2, 30); // occilate around error
 		  leftDrive.config_kI(0, 0.005, 30);
 		  leftDrive.config_kD(0, 25, 30);
-		  leftDrive.config_IntegralZone(0, 0, 30);
+      leftDrive.config_IntegralZone(0, 0, 30);
+      
 
 		  rightDrive.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 		  rightDrive.setSensorPhase(true);
@@ -194,31 +195,15 @@ public class Drive {
       speedL *= Constants.MAX_DRIVE_SPEED;
       speedR *= Constants.MAX_DRIVE_SPEED;
   
-      leftDrive.set(ControlMode.PercentOutput, speedL / 3);
-      rightDrive.set(ControlMode.PercentOutput, speedR / 3);
+      leftDrive.set(ControlMode.PercentOutput, speedL);
+      rightDrive.set(ControlMode.PercentOutput, speedR);
 
       SmartDashboard.putNumber("leftDriveSpeed", speedL);
       SmartDashboard.putNumber("rightDriveSpeed", speedR);
   
-      leftDriveSlave.set(ControlMode.PercentOutput, speedL / 3);
-      rightDriveSlave.set(ControlMode.PercentOutput, speedR / 3);
-  
-      timer = 0;
-  
-      while (timer < 10) {
-        timer++;
-        SmartDashboard.putNumber("leftDriveSpeed", speedL);
-        SmartDashboard.putNumber("rightDriveSpeed", speedR);
-      }
-  
-      leftDrive.set(ControlMode.PercentOutput, speedL);
-      rightDrive.set(ControlMode.PercentOutput, speedR);
-  
       leftDriveSlave.set(ControlMode.PercentOutput, speedL);
-      //leftDriveSlaveMid.set(ControlMode.PercentOutput, speedL);
       rightDriveSlave.set(ControlMode.PercentOutput, speedR);
-      //rightDriveSlaveMid.set(ControlMode.PercentOutput, speedR);
-  
+
     }
 
     public void configSupplyLimit(TalonFX talon) {
@@ -270,6 +255,10 @@ public class Drive {
       rightDrive.set(ControlMode.PercentOutput, 0);
       rightDriveSlave.set(ControlMode.PercentOutput, 0);
       //rightDriveSlaveFront.set(ControlMode.PercentOutput, 0);
+    }
+
+    public void spinMotor() {
+      leftDrive.set(ControlMode.Follower, leftDriveSlave.getDeviceID());
     }
 
 }

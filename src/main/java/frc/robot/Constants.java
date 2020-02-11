@@ -16,11 +16,13 @@ public class Constants {
 	public static final int R_DRIVE_SLAVE_ID = 2; //
 	public static final int L_DRIVE_ID = 3; // left side motor farthest from talons
 	public static final int L_DRIVE_SLAVE_ID = 4; //
+	public static final int INTAKE_ID = 5;
+	public static final int INDEXER_ID = 6;
 	
 	public static final int SHOOTER_MOTOR_A_ID = 9;
 	public static final int SHOOTER_MOTOR_B_ID = 8; 
 	
-	public static final int TURRET_MOTOR_ID = 3;
+	public static final int TURRET_MOTOR_ID = 10;
 	
 	
 	/*public static final int R_ELEVATOR_ID = 7;
@@ -48,6 +50,10 @@ public class Constants {
 
 	/* SHOOTER CONSTANTS */
 	public static final double MAX_SHOOTER_SPEED = 1;
+
+	/* INTAKE CONSTANTS */
+	public static final double MAX_INDEX_SPEED = 1;
+	public static final double MAX_INTAKE_SPEED = 1;
 
 	/* TURRET CONSTANTS */
 	public static final double MAX_TURRET_SPEED = 1; 
