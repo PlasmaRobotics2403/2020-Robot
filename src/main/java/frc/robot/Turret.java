@@ -10,31 +10,31 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 public class Turret {
-    public TalonSRX motor;
+    public TalonSRX turretRotationMotor;
 
-    public Turret (int motorID){
+    public Turret (int TURRET_ROTATION_MOTOR_ID){
 
-        motor = new TalonSRX(motorID);
+        turretRotationMotor = new TalonSRX(TURRET_ROTATION_MOTOR_ID);
 
-        limitCurrent(motor);
+        limitCurrent(turretRotationMotor);
     }
 
-    public void turn (double turnVal) {
+    public void turn(double turnVal) {
         turnVal *= Constants.MAX_TURRET_SPEED;
 
-        motor.set(ControlMode.PercentOutput, turnVal);
-        
+        turretRotationMotor.set(ControlMode.PercentOutput, turnVal);
+
         SmartDashboard.putNumber("turretTurnSpeed", turnVal);
     }
 
     public void limitCurrent(TalonSRX talon) {
-		talon.configPeakCurrentDuration(0, 1000);
-		talon.configPeakCurrentLimit(15, 1000);
-		talon.configContinuousCurrentLimit(15, 1000);
-		talon.enableCurrentLimit(true);
+        talon.configPeakCurrentDuration(0, 1000);
+        talon.configPeakCurrentLimit(15, 1000);
+        talon.configContinuousCurrentLimit(15, 1000);
+        talon.enableCurrentLimit(true);
     }
-    
+
     public void stopTurning() {
-        motor.set(ControlMode.PercentOutput, 0);
+        turretRotationMotor.set(ControlMode.PercentOutput, 0);
     }
 }

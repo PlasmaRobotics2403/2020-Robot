@@ -34,8 +34,6 @@ public class Drive {
     public TalonFX rightDrive;
     public TalonFX rightDriveSlave;
 
-    private int timer;
-
     private AHRS navX;
     private double gyroAngle;
     private double gyroPitch;

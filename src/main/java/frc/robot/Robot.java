@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
     intake = new Intake(Constants.INTAKE_ID,
                         Constants.INDEXER_ID);
 
-    controlPanel = new ControlPanel();
+    controlPanel = new ControlPanel(Constants.SPIN_CONTROL_PANEL_MOTOR_ID);
 
     driveTrain.resetEncoders();
     driveTrain.zeroGyro();

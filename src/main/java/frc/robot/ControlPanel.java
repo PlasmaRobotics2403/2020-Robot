@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
@@ -15,9 +17,11 @@ public class ControlPanel {
     public ColorMatchResult matchedColor;
     public Color detectedColor;
     public String color;
+
+    public TalonSRX SpinControlPanelMotor;
     
 
-    public ControlPanel (){
+    public ControlPanel (final int SPINNER_ID) {
 
         colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
@@ -27,27 +31,25 @@ public class ControlPanel {
         colorMatcher.addColorMatch(Constants.GREEN_TARGET);
         colorMatcher.addColorMatch(Constants.RED_TARGET);
         colorMatcher.addColorMatch(Constants.YELLOW_TARGET);
+
+        SpinControlPanelMotor = new TalonSRX(SPINNER_ID);
     }
 
     public void detectColor() {
-       
+
         detectedColor = colorSensor.getColor();
 
         matchedColor = colorMatcher.matchClosestColor(detectedColor);
 
-        if(matchedColor.color == Constants.BLUE_TARGET) {
+        if (matchedColor.color == Constants.BLUE_TARGET) {
             color = "Blue";
-        }
-        else if(matchedColor.color == Constants.RED_TARGET) {
+        } else if (matchedColor.color == Constants.RED_TARGET) {
             color = "Red";
-        }
-        else if(matchedColor.color == Constants.GREEN_TARGET) {
+        } else if (matchedColor.color == Constants.GREEN_TARGET) {
             color = "Green";
-        }
-        else if(matchedColor.color == Constants.YELLOW_TARGET) {
+        } else if (matchedColor.color == Constants.YELLOW_TARGET) {
             color = "Yellow";
-        }
-        else {
+        } else {
             color = "Unknown";
         }
 
@@ -56,6 +58,10 @@ public class ControlPanel {
         SmartDashboard.putNumber("Green", colorSensor.getGreen());
         SmartDashboard.putNumber("Confidence", matchedColor.confidence);
         SmartDashboard.putString("Detected Color", color);
-        
+
+    }
+
+    void spinControlPanel(final int speed) {
+        SpinControlPanelMotor.set(ControlMode.PercentOutput, speed);
     }
 }

@@ -1,59 +1,65 @@
 package frc.robot;
 
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 
 public class Shooter {
-    TalonFX motorA;
-    TalonFX motorB;
+    TalonFX leftFlyWheelMotor;
+    TalonFX rightFlyWheelMotor;
+    TalonSRX hoodMotor;
+    TalonSRX frontRollerMotor;
+    TalonSRX backRollerMotor;
+    
+    Shooter(int LEFT_FLY_WHEEL_MOTOR_ID, int RIGHT_FLY_WHEEL_MOTOR_ID, int HOOD_MOTOR_ID, int FRONT_ROLLER_MOTOR_ID, int BACK_ROLLER_MOTOR_ID) {
+        leftFlyWheelMotor = new TalonFX(LEFT_FLY_WHEEL_MOTOR_ID);
+        rightFlyWheelMotor = new TalonFX(RIGHT_FLY_WHEEL_MOTOR_ID);
+        hoodMotor = new TalonSRX(HOOD_MOTOR_ID);
+        frontRollerMotor = new TalonSRX(FRONT_ROLLER_MOTOR_ID);
+        backRollerMotor = new TalonSRX(BACK_ROLLER_MOTOR_ID);
 
-    double speed;
+        limitCurrent(leftFlyWheelMotor);
+        limitCurrent(rightFlyWheelMotor);
+        limitCurrent(hoodMotor);
+        limitCurrent(frontRollerMotor);
+        limitCurrent(backRollerMotor);
 
-    private DoubleSolenoid leftSolenoid = new DoubleSolenoid(0, 1);
-    private DoubleSolenoid rightSolenoid = new DoubleSolenoid(2, 3);
-
-    Shooter(int motor_A_ID, int motor_B_ID) {
-        motorA = new TalonFX(motor_A_ID);
-        motorB = new TalonFX(motor_B_ID);
-
-        limitCurrent(motorA);
-        limitCurrent(motorB);
-
-        motorA.setInverted(false);
-        motorB.setInverted(true);
+        leftFlyWheelMotor.setInverted(false);
+        rightFlyWheelMotor.setInverted(true);
+        hoodMotor.setInverted(false);
+        frontRollerMotor.setInverted(false);
+        backRollerMotor.setInverted(false);
 
     };
 
-    void shoot() {
+    public void shoot() {
         double speed = Constants.MAX_SHOOTER_SPEED;
 
-        motorA.set(ControlMode.PercentOutput, -speed); 
-        motorB.set(ControlMode.PercentOutput, -speed);
+        leftFlyWheelMotor.set(ControlMode.PercentOutput, -speed);
+        rightFlyWheelMotor.set(ControlMode.PercentOutput, -speed);
     }
 
-    void stop() {
-        motorA.set(ControlMode.PercentOutput, 0);
-        motorB.set(ControlMode.PercentOutput, 0);
+    public void stop() {
+        leftFlyWheelMotor.set(ControlMode.PercentOutput, 0);
+        rightFlyWheelMotor.set(ControlMode.PercentOutput, 0);
     }
 
-    void extendHood() {
-        leftSolenoid.set(Value.kForward);
-        rightSolenoid.set(Value.kForward);
-    }
-
-    void retractHood() {
-        leftSolenoid.set(Value.kReverse);
-        rightSolenoid.set(Value.kReverse);
+    public void feedBalls(double speed) {
+        speed *= Constants.MAX_BALL_FEED_SPEED;
+        frontRollerMotor.set(ControlMode.PercentOutput, speed);
+        backRollerMotor.set(ControlMode.PercentOutput, speed);
     }
 
     public void limitCurrent(TalonFX talon) {
         talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(), 1000);
+    }
+
+    public void limitCurrent(TalonSRX talon) {
+		talon.configPeakCurrentDuration(0, 1000);
+		talon.configPeakCurrentLimit(15, 1000);
+		talon.configContinuousCurrentLimit(15, 1000);
+		talon.enableCurrentLimit(true);
     }
 };
