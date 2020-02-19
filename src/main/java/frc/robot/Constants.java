@@ -25,23 +25,10 @@ public class Constants {
 	public static final int FRONT_ROLLER_MOTOR_ID = 11;
 	public static final int BACK_ROLLER_MOTOR_ID = 12;
 	public static final int TURRET_MOTOR_ID = 13;
-	
-	
-	/*public static final int R_ELEVATOR_ID = 7;
-	public static final int L_ELEVATOR_ID = 10;
-	public static final int PIVOT_ID = 13; // motor id that pivots the intake
-	public static final int INTAKE_ID = 9; // motor id that intakes cargo
-	public static final int L_HAB_ELEVATOR_ID = 11;
-	public static final int R_HAB_ELEVATOR_ID = 8;
-	public static final int HAB_DRIVE = 12;
-	public static final int R_HAB_ARM_ID = 14;
-	public static final int L_HAB_ARM_ID = 15;*/
 
-	/* VICTORSPX ID CONSTANTS */
-	/*public static final int R_DRIVE_MID_SLAVE_ID = 2; // right side motor in the middle
-	public static final int R_DRIVE_FRONT_SLAVE_ID = 3; // right side motor closest to talons
-	public static final int L_DRIVE_MID_SLAVE_ID = 5; // left side motor in the middle
-	public static final int L_DRIVE_FRONT_SLAVE_ID = 6; // left side motor closest to talons*/
+	/* PNUEMATIC CONSTANTS */
+	public static final int INTAKE_FORWARD_ID = 0;
+	public static final int INTAKE_REVERSE_ID = 1;
 
 
 	/* DRIVETRAIN CONSTANTS */

@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import frc.robot.controllers.PlasmaJoystick;
@@ -33,6 +34,8 @@ public class Robot extends TimedRobot {
   Intake intake;
   Turret turret;
   ControlPanel controlPanel;
+
+  Compressor compressor; 
 
   NetworkTable table;
   NetworkTableEntry tx;
@@ -64,9 +67,13 @@ public class Robot extends TimedRobot {
     turret = new Turret(Constants.TURRET_MOTOR_ID);
 
     intake = new Intake(Constants.INTAKE_ID,
-                        Constants.INDEXER_ID);
+                        Constants.INDEXER_ID,
+                        Constants.INTAKE_FORWARD_ID,
+                        Constants.INTAKE_REVERSE_ID);
 
     controlPanel = new ControlPanel(Constants.SPIN_CONTROL_PANEL_MOTOR_ID);
+
+    compressor = new Compressor();
 
     driveTrain.resetEncoders();
     driveTrain.zeroGyro();
@@ -159,6 +166,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driverControls(joystick);
+    compressor.start();
   }
 
   public void driverControls(final PlasmaJoystick joystick) {
@@ -204,6 +212,13 @@ public class Robot extends TimedRobot {
     /*if(joystick.X.isPressed()) { 
       controlPanel.detectColor(); 
     }*/
+
+    if(joystick.L3.isPressed()){
+      intake.extendForeBar();
+    }
+    if(joystick.R3.isPressed()){
+      intake.retractForeBar();
+    }
   }
 
   public void visionLineUp() {
