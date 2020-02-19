@@ -25,6 +25,8 @@ public class Constants {
 	public static final int FRONT_ROLLER_MOTOR_ID = 11;
 	public static final int BACK_ROLLER_MOTOR_ID = 12;
 	public static final int TURRET_MOTOR_ID = 13;
+	public static final int LEFT_CLIMB_MOTOR_ID = 14;
+	public static final int RIGHT_CLIMB_MOTOR_ID = 15;
 
 	/* PNUEMATIC CONSTANTS */
 	public static final int INTAKE_FORWARD_ID = 0;
@@ -47,6 +49,9 @@ public class Constants {
 
 	/* TURRET CONSTANTS */
 	public static final double MAX_TURRET_SPEED = 1; 
+
+	/* CLIMB CONSTANTS */
+	public static final double MAX_SPOOL_SPEED = .7;
 
 	/* CONTROL PANEL CONSTANTS */
 	public final static Color BLUE_TARGET = ColorMatch.makeColor(0.143, 0.427, 0.429);

@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
   //Shooter shooter;
   Intake intake;
   Turret turret;
+  Climb climb;
   ControlPanel controlPanel;
 
   Compressor compressor; 
@@ -70,6 +71,9 @@ public class Robot extends TimedRobot {
                         Constants.INDEXER_ID,
                         Constants.INTAKE_FORWARD_ID,
                         Constants.INTAKE_REVERSE_ID);
+
+    climb = new Climb(Constants.LEFT_CLIMB_MOTOR_ID,
+                      Constants.RIGHT_CLIMB_MOTOR_ID);
 
     controlPanel = new ControlPanel(Constants.SPIN_CONTROL_PANEL_MOTOR_ID);
 
