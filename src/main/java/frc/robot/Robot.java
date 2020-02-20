@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
 
   PlasmaJoystick joystick;
   Drive driveTrain;
-  //Shooter shooter;
+  Shooter shooter;
   Intake intake;
   Turret turret;
   Climb climb;
@@ -62,8 +62,10 @@ public class Robot extends TimedRobot {
 
     driveTrain = new Drive(Constants.L_DRIVE_ID, Constants.L_DRIVE_SLAVE_ID, Constants.R_DRIVE_ID, Constants.R_DRIVE_SLAVE_ID);
 
-    //shooter = new Shooter(Constants.SHOOTER_MOTOR_A_ID,
-     //                      Constants.SHOOTER_MOTOR_B_ID);
+    shooter = new Shooter(Constants.LEFT_FLY_WHEEL_MOTOR_ID,
+                          Constants.RIGHT_FLY_WHEEL_MOTOR_ID,
+                          Constants.HOOD_MOTOR_ID,
+                          Constants.FRONT_ROLLER_MOTOR_ID);
 
     turret = new Turret(Constants.TURRET_MOTOR_ID);
 
@@ -73,7 +75,8 @@ public class Robot extends TimedRobot {
                         Constants.INTAKE_REVERSE_ID);
 
     climb = new Climb(Constants.LEFT_CLIMB_MOTOR_ID,
-                      Constants.RIGHT_CLIMB_MOTOR_ID);
+                      Constants.RIGHT_CLIMB_MOTOR_ID,
+                      Constants.CLIMB_LATCH_ID);
 
     controlPanel = new ControlPanel(Constants.SPIN_CONTROL_PANEL_MOTOR_ID);
 
@@ -170,58 +173,68 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driverControls(joystick);
-    compressor.start();
+    //compressor.start();
   }
 
   public void driverControls(final PlasmaJoystick joystick) {
     driveTrain.FPSDrive(joystick.LeftY, joystick.RightX);
-    intake.intakeBall(joystick.RT);
-
-    if (joystick.LT.isOffToOn()) {
-      //shooter.shoot();
-    } else {
-      //shooter.stop();
-    }
 
     if(joystick.RB.isPressed()) {
-      intake.indexBall(1);
+      intake.intakeBall(Constants.MAX_INTAKE_SPEED);
+    }
+    else {
+      intake.intakeBall(0);
+    }
+
+    if(joystick.A.isPressed()) {
+      intake.indexBall(Constants.MAX_INDEX_SPEED);
+      shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
     }
     else{
       intake.indexBall(0);
+      shooter.feedBalls(0);
     }
 
-    if (joystick.START.isPressed()){
-      //shooter.extendHood();
-    }
-    if (joystick.BACK.isPressed()){
-      //shooter.retractHood();
-    }
-
-    if (joystick.A.isPressed()) {
-      turret.turn(1);
-    } else if (joystick.B.isPressed()) {
-      turret.turn(-1);
-    } else {
-      turret.turn(0);
-    }
- 
-    if(joystick.Y.isPressed()) { 
-      visionTurretLineUp(); 
-    }
-
-    if(joystick.X.isPressed()) {
-      driveTrain.spinMotor();
-    }
-      
-    /*if(joystick.X.isPressed()) { 
-      controlPanel.detectColor(); 
-    }*/
-
-    if(joystick.L3.isPressed()){
+    if(joystick.L3.isPressed()) {
       intake.extendForeBar();
     }
-    if(joystick.R3.isPressed()){
+    if(joystick.R3.isPressed()) {
       intake.retractForeBar();
+    }
+
+    if(joystick.Y.isPressed()) {
+      controlPanel.spinControlPanel(Constants.MAX_CONTROL_PANEL_SPEED);
+      //extend control panel
+    }
+    else{
+      controlPanel.spinControlPanel(0);
+      //retract control panel
+    }
+
+    if(joystick.RT.isPressed()){
+      //extend hood
+      shooter.shoot(distance);
+    }
+    else {
+      //retract hood
+      shooter.stop();
+    }
+
+    if(joystick.dPad.getPOV() > 315 || joystick.dPad.getPOV() < 45) {
+      climb.releaseLatch();
+    }
+    else {
+      climb.engageLatch();
+    }
+
+    if(joystick.dPad.getPOV() > 135 && joystick.dPad.getPOV() < 225) {
+      climb.spoolCable(Constants.MAX_SPOOL_SPEED);
+    }
+    else if(joystick.LT.isPressed()) {
+      climb.spoolCable(-1);
+    }
+    else {
+      climb.spoolCable(0);
     }
   }
 

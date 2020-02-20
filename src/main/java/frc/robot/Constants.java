@@ -27,10 +27,12 @@ public class Constants {
 	public static final int TURRET_MOTOR_ID = 13;
 	public static final int LEFT_CLIMB_MOTOR_ID = 14;
 	public static final int RIGHT_CLIMB_MOTOR_ID = 15;
+	
 
 	/* PNUEMATIC CONSTANTS */
 	public static final int INTAKE_FORWARD_ID = 0;
 	public static final int INTAKE_REVERSE_ID = 1;
+	public static final int CLIMB_LATCH_ID = 2;
 
 
 	/* DRIVETRAIN CONSTANTS */
@@ -58,6 +60,8 @@ public class Constants {
 	public final static Color GREEN_TARGET = ColorMatch.makeColor(0.197, 0.561, 0.240);
 	public final static Color RED_TARGET = ColorMatch.makeColor(0.561, 0.232, 0.114);
 	public final static Color YELLOW_TARGET = ColorMatch.makeColor(0.361, 0.524, 0.113);
+
+	public static final double MAX_CONTROL_PANEL_SPEED = 1;
 
 	/* VISION CONSTANTS */
 	public static final double CAMERA_HEIGHT = 25.625; //inches

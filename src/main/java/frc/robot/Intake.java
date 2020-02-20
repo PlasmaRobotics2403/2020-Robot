@@ -26,16 +26,12 @@ public class Intake {
         limitCurrent(indexerMotor);
     };
 
-    void intakeBall(PlasmaTrigger trigger) {
-        double speed = trigger.getFilteredAxis();
-
+    void intakeBall(double speed) {
         intakeMotor.set(ControlMode.PercentOutput, speed);
     }
 
     void indexBall(double speed){
-        double indexSpeed = speed * Constants.MAX_INDEX_SPEED;
-
-        indexerMotor.set(ControlMode.PercentOutput, indexSpeed);
+        indexerMotor.set(ControlMode.PercentOutput, speed);
     }
 
     void extendForeBar(){
