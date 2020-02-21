@@ -61,7 +61,7 @@ public class ControlPanel {
 
     }
 
-    void spinControlPanel(final int speed) {
+    void spinControlPanel(double speed) {
         SpinControlPanelMotor.set(ControlMode.PercentOutput, speed);
     }
 }

@@ -2,17 +2,27 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class Climb {
-    TalonSRX leftClimbMotor;
-    TalonSRX rightClimbMotor;
+    VictorSPX leftClimbMotor;
+    VictorSPX rightClimbMotor;
 
-    Climb(int left_climb_motor_ID, int right_climb_motor_ID) {
-        leftClimbMotor = new TalonSRX(left_climb_motor_ID);
-        rightClimbMotor = new TalonSRX(right_climb_motor_ID);
+    Solenoid climbLatch;
 
-        limitCurrent(leftClimbMotor);
-        limitCurrent(rightClimbMotor);
+    Climb(int left_climb_motor_ID, int right_climb_motor_ID, int climb_latch_ID) {
+        leftClimbMotor = new VictorSPX(left_climb_motor_ID);
+        rightClimbMotor = new VictorSPX(right_climb_motor_ID);
+
+        climbLatch = new Solenoid(climb_latch_ID);
+
+        leftClimbMotor.setInverted(false);
+        rightClimbMotor.setInverted(true);
+
+        //limitCurrent(leftClimbMotor);
+        //limitCurrent(rightClimbMotor);
     };
 
     void spoolCable(double speed) {
@@ -20,6 +30,14 @@ public class Climb {
 
         leftClimbMotor.set(ControlMode.PercentOutput, spoolSpeed);
         rightClimbMotor.set(ControlMode.PercentOutput, spoolSpeed);
+    }
+
+    void releaseLatch() {
+        climbLatch.set(true);
+    }
+
+    void engageLatch() {
+        climbLatch.set(false);
     }
 
 
