@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 
@@ -10,20 +11,19 @@ public class Shooter {
     TalonFX leftFlyWheelMotor;
     TalonFX rightFlyWheelMotor;
     TalonSRX hoodMotor;
-    TalonSRX frontRollerMotor;
+    VictorSPX frontRollerMotor;
     TalonSRX backRollerMotor;
     
     Shooter(int LEFT_FLY_WHEEL_MOTOR_ID, int RIGHT_FLY_WHEEL_MOTOR_ID, int HOOD_MOTOR_ID, int FRONT_ROLLER_MOTOR_ID, int BACK_ROLLER_MOTOR_ID) {
         leftFlyWheelMotor = new TalonFX(LEFT_FLY_WHEEL_MOTOR_ID);
         rightFlyWheelMotor = new TalonFX(RIGHT_FLY_WHEEL_MOTOR_ID);
         hoodMotor = new TalonSRX(HOOD_MOTOR_ID);
-        frontRollerMotor = new TalonSRX(FRONT_ROLLER_MOTOR_ID);
+        frontRollerMotor = new VictorSPX(FRONT_ROLLER_MOTOR_ID);
         backRollerMotor = new TalonSRX(BACK_ROLLER_MOTOR_ID);
 
         limitCurrent(leftFlyWheelMotor);
         limitCurrent(rightFlyWheelMotor);
         limitCurrent(hoodMotor);
-        limitCurrent(frontRollerMotor);
         limitCurrent(backRollerMotor);
 
         leftFlyWheelMotor.setInverted(false);
