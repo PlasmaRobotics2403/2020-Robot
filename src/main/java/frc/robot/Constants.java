@@ -33,6 +33,7 @@ public class Constants {
 	public static final int INTAKE_FORWARD_ID = 0;
 	public static final int INTAKE_REVERSE_ID = 1;
 	public static final int CLIMB_LATCH_ID = 2;
+	public static final int CLIMB_LATCH_PLUG_ID = 3;
 
 
 	/* DRIVETRAIN CONSTANTS */

@@ -76,7 +76,8 @@ public class Robot extends TimedRobot {
 
     climb = new Climb(Constants.LEFT_CLIMB_MOTOR_ID,
                       Constants.RIGHT_CLIMB_MOTOR_ID,
-                      Constants.CLIMB_LATCH_ID);
+                      Constants.CLIMB_LATCH_ID,
+                      Constants.CLIMB_LATCH_PLUG_ID);
 
     controlPanel = new ControlPanel(Constants.SPIN_CONTROL_PANEL_MOTOR_ID);
 
@@ -136,6 +137,7 @@ public class Robot extends TimedRobot {
 
   public void disabledInit() {
     driveTrain.zeroGyro();
+    climb.engageLatch();
   }
 
   public void disabledPeriodic() {
@@ -200,6 +202,7 @@ public class Robot extends TimedRobot {
     }
     if(joystick.R3.isPressed()) {
       intake.retractForeBar();
+      //climb.engageLatch();
     }
 
     if(joystick.Y.isPressed()) {
@@ -223,14 +226,11 @@ public class Robot extends TimedRobot {
       shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
     }
 
-    if(joystick.dPad.getPOV() > 315 || joystick.dPad.getPOV() < 45) {
+    if(joystick.dPad.getPOV() == 0)  {
       climb.releaseLatch();
     }
-    else {
-      climb.engageLatch();
-    }
 
-    if(joystick.dPad.getPOV() > 135 && joystick.dPad.getPOV() < 225) {
+    if(joystick.dPad.getPOV() == 180) {
       climb.spoolCable(Constants.MAX_SPOOL_SPEED);
     }
     else if(joystick.LT.isPressed()) {

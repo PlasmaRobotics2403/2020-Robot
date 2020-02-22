@@ -4,19 +4,20 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Climb {
     VictorSPX leftClimbMotor;
     VictorSPX rightClimbMotor;
 
-    Solenoid climbLatch;
+    DoubleSolenoid climbLatch;
 
-    Climb(int left_climb_motor_ID, int right_climb_motor_ID, int climb_latch_ID) {
+    Climb(int left_climb_motor_ID, int right_climb_motor_ID, int climb_latch_ID, int climb_latch_plug_ID) {
         leftClimbMotor = new VictorSPX(left_climb_motor_ID);
         rightClimbMotor = new VictorSPX(right_climb_motor_ID);
 
-        climbLatch = new Solenoid(climb_latch_ID);
+        climbLatch = new DoubleSolenoid(climb_latch_ID, climb_latch_plug_ID);
 
         leftClimbMotor.setInverted(false);
         rightClimbMotor.setInverted(true);
@@ -33,11 +34,11 @@ public class Climb {
     }
 
     void releaseLatch() {
-        climbLatch.set(true);
+        climbLatch.set(Value.kReverse);
     }
 
     void engageLatch() {
-        climbLatch.set(false);
+        climbLatch.set(Value.kForward);
     }
 
 
