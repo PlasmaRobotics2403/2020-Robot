@@ -178,6 +178,7 @@ public class Robot extends TimedRobot {
 
   public void driverControls(final PlasmaJoystick joystick) {
     driveTrain.FPSDrive(joystick.LeftY, joystick.RightX);
+    visionTurretLineUp();
 
     if(joystick.RB.isPressed()) {
       intake.intakeBall(Constants.MAX_INTAKE_SPEED);
@@ -188,7 +189,6 @@ public class Robot extends TimedRobot {
 
     if(joystick.A.isPressed()) {
       intake.indexBall(Constants.MAX_INDEX_SPEED);
-      shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
     }
     else{
       intake.indexBall(0);
@@ -213,11 +213,14 @@ public class Robot extends TimedRobot {
 
     if(joystick.RT.isPressed()){
       //extend hood
-      shooter.shoot(distance);
+      shooter.shoot(Constants.MAX_SHOOTER_SPEED);
     }
     else {
       //retract hood
       shooter.stop();
+    }
+    if(joystick.X.isPressed()) {
+      shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
     }
 
     if(joystick.dPad.getPOV() > 315 || joystick.dPad.getPOV() < 45) {

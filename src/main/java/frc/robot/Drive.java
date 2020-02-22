@@ -11,6 +11,7 @@ import frc.robot.controllers.PlasmaAxis;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 //import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 //import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -87,14 +88,24 @@ public class Drive {
 		  DriverStation.reportError("left position: " + leftDrive.getSelectedSensorPosition(0), false);
 		  DriverStation.reportError("right position: " + rightDrive.getSelectedSensorPosition(0), false);
 
-		  configSupplyLimit(leftDrive);
-      configSupplyLimit(rightDrive);
+		  currentLimit(leftDrive);
+      currentLimit(rightDrive);
 
 		  leftDrive.setInverted(false);
 		  leftDriveSlave.setInverted(false);
 
 		  rightDrive.setInverted(true);
-		  rightDriveSlave.setInverted(true);
+      rightDriveSlave.setInverted(true);
+      
+      leftDrive.setNeutralMode(NeutralMode.Brake);
+      rightDrive.setNeutralMode(NeutralMode.Brake);
+      leftDriveSlave.setNeutralMode(NeutralMode.Brake);
+      rightDriveSlave.setNeutralMode(NeutralMode.Brake);
+
+      leftDrive.configClosedloopRamp(1);
+      rightDrive.configClosedloopRamp(1);
+      leftDriveSlave.configClosedloopRamp(1);
+      rightDriveSlave.configClosedloopRamp(1);
     }
 
     public void FPSDrive(PlasmaAxis forwardAxis, PlasmaAxis turnAxis) {
@@ -204,8 +215,8 @@ public class Drive {
 
     }
 
-    public void configSupplyLimit(TalonFX talon) {
-      talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(), 1000);
+    public void currentLimit(TalonFX talon) {
+      talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 35, 35,0));
     }
     
     public void leftWheelDrive(double speed) {

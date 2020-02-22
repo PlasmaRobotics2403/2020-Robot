@@ -43,11 +43,11 @@ public class Constants {
 
 	/* SHOOTER CONSTANTS */
 	public static final double MAX_SHOOTER_SPEED = 1;
-	public static final double MAX_BALL_FEED_SPEED = 1;
+	public static final double MAX_BALL_FEED_SPEED = 0.9;
 
 	/* INTAKE CONSTANTS */
-	public static final double MAX_INDEX_SPEED = 1;
-	public static final double MAX_INTAKE_SPEED = .75;
+	public static final double MAX_INDEX_SPEED = 0.9;
+	public static final double MAX_INTAKE_SPEED = 0.9;
 
 	/* TURRET CONSTANTS */
 	public static final double MAX_TURRET_SPEED = 1; 
