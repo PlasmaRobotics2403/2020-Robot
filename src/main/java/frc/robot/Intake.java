@@ -1,7 +1,5 @@
 package frc.robot;
 
-import frc.robot.controllers.PlasmaTrigger;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -35,11 +33,11 @@ public class Intake {
     }
 
     void extendForeBar(){
-        foreBarPiston.set(Value.kForward);
+        foreBarPiston.set(Value.kReverse);
     }
 
     void retractForeBar(){
-        foreBarPiston.set(Value.kReverse);
+        foreBarPiston.set(Value.kForward);
     }
 
     public void limitCurrent(TalonSRX talon) {

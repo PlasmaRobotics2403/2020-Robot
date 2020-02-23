@@ -90,6 +90,8 @@ public class Drive {
 
 		  currentLimit(leftDrive);
       currentLimit(rightDrive);
+      currentLimit(leftDriveSlave);
+      currentLimit(rightDriveSlave);
 
 		  leftDrive.setInverted(false);
 		  leftDriveSlave.setInverted(false);
@@ -102,18 +104,20 @@ public class Drive {
       leftDriveSlave.setNeutralMode(NeutralMode.Brake);
       rightDriveSlave.setNeutralMode(NeutralMode.Brake);
 
-      leftDrive.configClosedloopRamp(1);
-      rightDrive.configClosedloopRamp(1);
-      leftDriveSlave.configClosedloopRamp(1);
-      rightDriveSlave.configClosedloopRamp(1);
+      leftDrive.configClosedloopRamp(0.25);
+      rightDrive.configClosedloopRamp(0.25);
+      leftDriveSlave.configClosedloopRamp(0.25);
+      rightDriveSlave.configClosedloopRamp(0.25);
     }
 
     public void FPSDrive(PlasmaAxis forwardAxis, PlasmaAxis turnAxis) {
 
-      double forwardVal = forwardAxis.getFilteredAxis() * Math.abs(forwardAxis.getFilteredAxis());
-      double turnVal = turnAxis.getFilteredAxis() * Math.abs(turnAxis.getFilteredAxis())
-          * Math.abs(turnAxis.getFilteredAxis());
+      //double forwardVal = forwardAxis.getFilteredAxis() * Math.abs(forwardAxis.getFilteredAxis());
+      //double turnVal = turnAxis.getFilteredAxis() * Math.abs(turnAxis.getFilteredAxis()) * Math.abs(turnAxis.getFilteredAxis());
   
+      double forwardVal = forwardAxis.getFilteredAxis() * Math.abs(forwardAxis.getFilteredAxis()) * Math.abs(forwardAxis.getFilteredAxis());
+      double turnVal = turnAxis.getFilteredAxis() * Math.abs(turnAxis.getFilteredAxis()) * Math.abs(turnAxis.getFilteredAxis());
+
       FPSDrive(forwardVal, turnVal);
     }
     
@@ -216,7 +220,7 @@ public class Drive {
     }
 
     public void currentLimit(TalonFX talon) {
-      talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 35, 35,0));
+      talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 30,0));
     }
     
     public void leftWheelDrive(double speed) {

@@ -138,6 +138,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     driveTrain.zeroGyro();
     climb.engageLatch();
+    intake.retractForeBar();
   }
 
   public void disabledPeriodic() {
@@ -197,10 +198,10 @@ public class Robot extends TimedRobot {
       shooter.feedBalls(0);
     }
 
-    if(joystick.L3.isPressed()) {
+    if(joystick.R3.isPressed()) {
       intake.extendForeBar();
     }
-    if(joystick.R3.isPressed()) {
+    if(joystick.L3.isPressed()) {
       intake.retractForeBar();
       //climb.engageLatch();
     }

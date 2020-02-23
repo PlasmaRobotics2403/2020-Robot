@@ -39,7 +39,7 @@ public class Constants {
 	/* DRIVETRAIN CONSTANTS */
 	public static final double MAX_AUTO_DRIVE_SPEED = 0.9;
 	public static final double MAX_DRIVE_SPEED = 1;
-	public static final double MAX_DRIVE_TURN = 1;
+	public static final double MAX_DRIVE_TURN = 0.75;
 	public static final double DRIVE_ENCODER_CONVERSION = 0.004665594;
 
 	/* SHOOTER CONSTANTS */
