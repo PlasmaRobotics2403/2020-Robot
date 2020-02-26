@@ -35,6 +35,8 @@ public class Constants {
 	public static final int CLIMB_LATCH_ID = 2;
 	public static final int CLIMB_LATCH_PLUG_ID = 3;
 
+	/* DIO ID CONSTANTS */
+	public static final int INDEX_SENSOR_ID = 0;
 
 	/* DRIVETRAIN CONSTANTS */
 	public static final double MAX_AUTO_DRIVE_SPEED = 0.9;

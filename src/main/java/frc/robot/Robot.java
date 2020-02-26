@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -72,7 +73,8 @@ public class Robot extends TimedRobot {
     intake = new Intake(Constants.INTAKE_ID,
                         Constants.INDEXER_ID,
                         Constants.INTAKE_FORWARD_ID,
-                        Constants.INTAKE_REVERSE_ID);
+                        Constants.INTAKE_REVERSE_ID,
+                        Constants.INDEX_SENSOR_ID);
 
     climb = new Climb(Constants.LEFT_CLIMB_MOTOR_ID,
                       Constants.RIGHT_CLIMB_MOTOR_ID,
@@ -185,6 +187,9 @@ public class Robot extends TimedRobot {
 
     if(joystick.RB.isPressed()) {
       intake.intakeBall(Constants.MAX_INTAKE_SPEED);
+      if(intake.getIndexSensorState()) {
+        // run index for set amount
+      }
     }
     else {
       intake.intakeBall(0);
