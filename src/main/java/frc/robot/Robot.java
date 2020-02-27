@@ -124,15 +124,9 @@ public class Robot extends TimedRobot {
       SmartDashboard.putString("Camera Mode", "x1 Zoom");
     }
 
-    // x2 hardware zoom camera feed
-    if(table.getEntry("getpipe").getDouble(0) == 1) {
-      distance = (Constants.OUTERPORT_HEIGHT - Constants.CAMERA_HEIGHT) / Math.tan(Math.toRadians(vision_Y) + Math.toRadians(Constants.CAMERA_ANGLE));
+      distance = (Constants.OUTERPORT_HEIGHT - Constants.CAMERA_HEIGHT) / Math.tan(Math.toRadians(vision_Y) + Math.toRadians(Constants.CAMERA_ANGLE) + Constants.LIMELIGHT_PAN);
       distance /= 12; // convert from inches to feet
-    }
-    else {
-      distance = (Constants.OUTERPORT_HEIGHT - Constants.CAMERA_HEIGHT) / Math.tan(Math.toRadians(vision_Y) + Math.toRadians(Constants.CAMERA_ANGLE));
-      distance /= 12; // convert from inches to feet 
-    }
+      distance /= Constants.x2_ZOOM_CONVERION; // conversion from x1 zoom to x2 zoom
     
     SmartDashboard.putNumber("Distance", distance);
   }

@@ -67,9 +67,11 @@ public class Constants {
 	public static final double MAX_CONTROL_PANEL_SPEED = 1;
 
 	/* VISION CONSTANTS */
-	public static final double CAMERA_HEIGHT = 25.625; //inches
-	public static final double CAMERA_ANGLE = -2.7; //degrees
-	public static final double OUTERPORT_HEIGHT = 32; // 89 inches
+	public static final double CAMERA_HEIGHT = 24.5; //inches
+	public static final double CAMERA_ANGLE = 0; //degrees
+	public static final double OUTERPORT_HEIGHT = 98; // inches
+	public static final double x2_ZOOM_CONVERION = 1.1852;
+	public static final double LIMELIGHT_PAN = 14.9;
 
 	/* TALON CONFIG CONSTANTS */
 	public static final int TALON_TIMEOUT = 30;
