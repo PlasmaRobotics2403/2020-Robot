@@ -46,6 +46,11 @@ public class Shooter {
         rightFlyWheelMotor.set(ControlMode.PercentOutput, -speed);
     }
 
+    public void spinToRPM(double RPM) {
+        leftFlyWheelMotor.set(ControlMode.Velocity, Constants.FLY_WHEEL_RADIUS * RPM * Constants.RPM_TO_RAD_PER_SEC_CONVERSION);
+        rightFlyWheelMotor.set(ControlMode.Velocity, Constants.FLY_WHEEL_RADIUS * RPM * Constants.RPM_TO_RAD_PER_SEC_CONVERSION);
+    }
+
     public void stop() {
         leftFlyWheelMotor.set(ControlMode.PercentOutput, 0);
         rightFlyWheelMotor.set(ControlMode.PercentOutput, 0);
