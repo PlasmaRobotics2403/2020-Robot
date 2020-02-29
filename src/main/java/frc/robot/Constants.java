@@ -45,7 +45,7 @@ public class Constants {
 	public static final double DRIVE_ENCODER_CONVERSION = 0.004665594;
 
 	/* SHOOTER CONSTANTS */
-	public static final double MAX_SHOOTER_SPEED = 1;
+	public static final double MAX_SHOOTER_SPEED = .8;
 	public static final double MAX_BALL_FEED_SPEED = 0.9;
 	public static final double FLY_WHEEL_RADIUS = 5;
 	public static final double RPM_TO_RAD_PER_SEC_CONVERSION = 0.104719755;
@@ -73,7 +73,7 @@ public class Constants {
 	public static final double CAMERA_ANGLE = 0; //degrees
 	public static final double OUTERPORT_HEIGHT = 98; // inches
 	public static final double x2_ZOOM_Y_CONVERION = 1.077;
-	public static final double LIMELIGHT_PAN = 0;
+	public static final double LIMELIGHT_PAN = 6.468;
 
 	/* TALON CONFIG CONSTANTS */
 	public static final int TALON_TIMEOUT = 30;

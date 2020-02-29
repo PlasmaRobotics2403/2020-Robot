@@ -5,6 +5,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 
@@ -32,12 +35,11 @@ public class Shooter {
         rightFlyWheelMotor.setInverted(true);
 
         hoodMotor.setInverted(false);
-
-        frontRollerMotor.setInverted(false);
-        // backRollerMotor.setInverted(false);
-
+        hoodMotor.setSelectedSensorPosition(0,0,0);
         hoodMotor.setNeutralMode(NeutralMode.Brake);
 
+        frontRollerMotor.setInverted(false);
+        //backRollerMotor.setInverted(false);
     };
 
     public void shoot(double speed) {
@@ -59,6 +61,20 @@ public class Shooter {
     public void feedBalls(double speed) {;
         frontRollerMotor.set(ControlMode.PercentOutput, -speed);
         // backRollerMotor.set(ControlMode.PercentOutput, speed);
+    }
+
+    public void raiseHood() {
+        hoodMotor.set(ControlMode.PercentOutput, .25);
+    }
+    public void lowerHood() {
+        hoodMotor.set(ControlMode.PercentOutput, -.25);
+    }
+    public void freezeHood() {
+        hoodMotor.set(ControlMode.PercentOutput, 0);
+    }
+
+    public void displayHoodPosition() {
+        SmartDashboard.putNumber("hood position", hoodMotor.getSelectedSensorPosition());
     }
 
     public void limitCurrent(final TalonFX talon) {

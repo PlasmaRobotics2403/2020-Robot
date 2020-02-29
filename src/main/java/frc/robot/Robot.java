@@ -119,6 +119,7 @@ public class Robot extends TimedRobot {
     distance /= Constants.x2_ZOOM_Y_CONVERION; // conversion from x1 zoom to x2 zoom
     
     SmartDashboard.putNumber("Distance", distance);
+    shooter.displayHoodPosition();
   }
 
   public void disabledInit() {
@@ -185,6 +186,16 @@ public class Robot extends TimedRobot {
     else{
       intake.indexBall(0);
       shooter.feedBalls(0);
+    }
+
+    if(joystick.B.isPressed()) {
+      shooter.raiseHood();
+    }
+    else if(joystick.LB.isPressed()) {
+      shooter.lowerHood();
+    }
+    else {
+      shooter.freezeHood();
     }
 
     if(joystick.R3.isPressed()) {
