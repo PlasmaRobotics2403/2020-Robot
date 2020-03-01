@@ -74,7 +74,8 @@ public class Robot extends TimedRobot {
                         Constants.INDEXER_ID,
                         Constants.INTAKE_FORWARD_ID,
                         Constants.INTAKE_REVERSE_ID,
-                        Constants.INDEX_SENSOR_ID);
+                        Constants.INDEX_SENSOR_ID,
+                        Constants.ROLLER_MOTOR_ID);
 
     climb = new Climb(Constants.LEFT_CLIMB_MOTOR_ID,
                       Constants.RIGHT_CLIMB_MOTOR_ID,
@@ -114,18 +115,21 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("LimelightY", vision_Y);
     SmartDashboard.putNumber("LimelightArea", vision_Area);
 
-    distance = (Constants.OUTERPORT_HEIGHT - Constants.CAMERA_HEIGHT) / Math.tan(Math.toRadians(vision_Y) + Math.toRadians(Constants.CAMERA_ANGLE) + Constants.LIMELIGHT_PAN);
-    distance /= 12; // convert from inches to feet
-    distance /= Constants.x2_ZOOM_Y_CONVERION; // conversion from x1 zoom to x2 zoom
+    //distance = (Constants.OUTERPORT_HEIGHT - Constants.CAMERA_HEIGHT) / Math.tan(Math.toRadians(vision_Y) + Math.toRadians(Constants.CAMERA_ANGLE) + Constants.LIMELIGHT_PAN);
+    //distance /= 12; // convert from inches to feet
+    //distance /= Constants.x2_ZOOM_Y_CONVERION; // conversion from x1 zoom to x2 zoom
     
+    distance = Math.pow(Math.E, -Math.log(vision_Area/1539.1)/2.081);
+
     SmartDashboard.putNumber("Distance", distance);
     shooter.displayHoodPosition();
+    SmartDashboard.putNumber("shooter percent", shooter.getShooterPercentOutput());
   }
 
   public void disabledInit() {
     driveTrain.zeroGyro();
     climb.engageLatch();
-    intake.retractForeBar();
+    //intake.retractForeBar();
   }
 
   public void disabledPeriodic() {
@@ -168,35 +172,33 @@ public class Robot extends TimedRobot {
 
   public void driverControls(final PlasmaJoystick joystick) {
     driveTrain.FPSDrive(joystick.LeftY, joystick.RightX);
-    visionTurretLineUp();
+    //visionTurretLineUp();
 
     if(joystick.RB.isPressed()) {
-      intake.intakeBall(Constants.MAX_INTAKE_SPEED);
-      if(intake.getIndexSensorState()) {
-        // run index for set amount
-      }
+      intake.roller(Constants.MAX_ROLLER_SPEED);
     }
     else {
-      intake.intakeBall(0);
+      intake.roller(0);
     }
 
     if(joystick.A.isPressed()) {
       intake.indexBall(Constants.MAX_INDEX_SPEED);
+      intake.intakeBall(Constants.MAX_INTAKE_SPEED);
     }
     else{
       intake.indexBall(0);
-      shooter.feedBalls(0);
+      intake.intakeBall(0);
     }
 
-    if(joystick.B.isPressed()) {
-      shooter.raiseHood();
-    }
-    else if(joystick.LB.isPressed()) {
-      shooter.lowerHood();
-    }
-    else {
-      shooter.freezeHood();
-    }
+    //if(joystick.B.isPressed()) {
+    //  shooter.raiseHood();
+    //}
+    //else if(joystick.LB.isPressed()) {
+    //  shooter.lowerHood();
+    //}
+    //else {
+    //  shooter.freezeHood();
+    //}
 
     if(joystick.R3.isPressed()) {
       intake.extendForeBar();
@@ -216,12 +218,17 @@ public class Robot extends TimedRobot {
     }
 
     if(joystick.RT.isPressed()){
-      //extend hood
+      shooter.autoHood(distance);
       shooter.shoot(Constants.MAX_SHOOTER_SPEED);
+      if(shooter.getShooterPercentOutput() >= (Constants.MAX_SHOOTER_SPEED - .03) && shooter.getHoodPosition() > shooter.getTargetAngle() - shooter.getErrorRange() && shooter.getHoodPosition() < shooter.getTargetAngle() + shooter.getErrorRange()) {
+        shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
+      }
     }
     else {
       //retract hood
       shooter.stop();
+      shooter.hoodHidden();
+      shooter.feedBalls(0);
     }
     if(joystick.X.isPressed()) {
       shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);

@@ -99,10 +99,10 @@ public class Drive {
 		  rightDrive.setInverted(true);
       rightDriveSlave.setInverted(true);
       
-      leftDrive.setNeutralMode(NeutralMode.Brake);
-      rightDrive.setNeutralMode(NeutralMode.Brake);
-      leftDriveSlave.setNeutralMode(NeutralMode.Brake);
-      rightDriveSlave.setNeutralMode(NeutralMode.Brake);
+      leftDrive.setNeutralMode(NeutralMode.Coast);
+      rightDrive.setNeutralMode(NeutralMode.Coast);
+      leftDriveSlave.setNeutralMode(NeutralMode.Coast);
+      rightDriveSlave.setNeutralMode(NeutralMode.Coast);
 
       leftDrive.configClosedloopRamp(0.25);
       rightDrive.configClosedloopRamp(0.25);

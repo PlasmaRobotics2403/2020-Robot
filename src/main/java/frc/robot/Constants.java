@@ -11,7 +11,7 @@ public class Constants {
 	/* CONTROLLER CONSTANTS */
 	public static final int JOYSTICK1_PORT = 0;
 
-	/* TALON ID CONSTANTS */
+	/* MOTOR ID CONSTANTS */
 	public static final int R_DRIVE_ID = 1; // right side motor farthest from talons
 	public static final int R_DRIVE_SLAVE_ID = 2; //
 	public static final int L_DRIVE_ID = 3; // left side motor farthest from talons
@@ -27,6 +27,7 @@ public class Constants {
 	public static final int TURRET_MOTOR_ID = 13;
 	public static final int LEFT_CLIMB_MOTOR_ID = 14;
 	public static final int RIGHT_CLIMB_MOTOR_ID = 15;
+	public static final int ROLLER_MOTOR_ID = 16;
 	
 
 	/* PNUEMATIC CONSTANTS */
@@ -45,14 +46,16 @@ public class Constants {
 	public static final double DRIVE_ENCODER_CONVERSION = 0.004665594;
 
 	/* SHOOTER CONSTANTS */
-	public static final double MAX_SHOOTER_SPEED = .8;
+	public static final double MAX_SHOOTER_SPEED = 0.8;
 	public static final double MAX_BALL_FEED_SPEED = 0.9;
-	public static final double FLY_WHEEL_RADIUS = 5;
+	public static final double FLY_WHEEL_RADIUS = 0.0635; //meters
 	public static final double RPM_TO_RAD_PER_SEC_CONVERSION = 0.104719755;
+	public static final double ANGLE_ERROR_PERCENT = 0.04;
 
 	/* INTAKE CONSTANTS */
 	public static final double MAX_INDEX_SPEED = 0.9;
 	public static final double MAX_INTAKE_SPEED = 0.9;
+	public static final double MAX_ROLLER_SPEED = 0.5;
 
 	/* TURRET CONSTANTS */
 	public static final double MAX_TURRET_SPEED = 1; 
