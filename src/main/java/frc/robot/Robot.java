@@ -52,6 +52,9 @@ public class Robot extends TimedRobot {
 
   double distance;
 
+  int ballCounter;
+  boolean ballCounted;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -94,6 +97,8 @@ public class Robot extends TimedRobot {
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
 
+    ballCounter = 0;
+    ballCounted = false;
   }
 
   /**
@@ -124,11 +129,17 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Distance", distance);
     shooter.displayHoodPosition();
     SmartDashboard.putNumber("shooter percent", shooter.getShooterPercentOutput());
+
+    SmartDashboard.putBoolean("sensor state", intake.getIndexSensorState());
+    intake.displayIndexPosition();
+    SmartDashboard.putNumber("ball count", ballCounter);
   }
 
   public void disabledInit() {
     driveTrain.zeroGyro();
     climb.engageLatch();
+    intake.resetAdvanceBall();
+    ballCounted = false;
     //intake.retractForeBar();
   }
 
@@ -174,6 +185,24 @@ public class Robot extends TimedRobot {
     driveTrain.FPSDrive(joystick.LeftY, joystick.RightX);
     //visionTurretLineUp();
 
+    if(intake.getIndexSensorState() == false) {
+      intake.advanceBall();
+      if(ballCounted == false){
+        ballCounter ++;
+        ballCounted = true;
+      }
+    }
+    else if(joystick.A.isPressed()){
+      intake.indexBall(Constants.MAX_INDEX_SPEED);
+      intake.intakeBall(Constants.MAX_INTAKE_SPEED);
+    }
+    else {
+      intake.indexBall(0);
+      intake.intakeBall(0);
+      intake.resetAdvanceBall();
+      ballCounted = false;
+    }
+
     if(joystick.RB.isPressed()) {
       intake.roller(Constants.MAX_ROLLER_SPEED);
     }
@@ -181,14 +210,7 @@ public class Robot extends TimedRobot {
       intake.roller(0);
     }
 
-    if(joystick.A.isPressed()) {
-      intake.indexBall(Constants.MAX_INDEX_SPEED);
-      intake.intakeBall(Constants.MAX_INTAKE_SPEED);
-    }
-    else{
-      intake.indexBall(0);
-      intake.intakeBall(0);
-    }
+  
 
     //if(joystick.B.isPressed()) {
     //  shooter.raiseHood();

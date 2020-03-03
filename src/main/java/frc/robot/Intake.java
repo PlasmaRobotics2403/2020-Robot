@@ -1,12 +1,14 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {
     TalonSRX intakeMotor;
@@ -23,6 +25,15 @@ public class Intake {
         intakeMotor = new TalonSRX(intake_motor_ID);
         indexMotor = new TalonSRX(indexer_motor_ID);
         rollerMotor = new VictorSPX(roller_motor_ID);
+
+        indexMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        indexMotor.setSelectedSensorPosition(0,0,0);
+
+        indexMotor.config_kF(0, 0.667, 30); //feed forward speed
+        indexMotor.config_kP(0, 21, 30); // used to get close to position
+		indexMotor.config_kI(0, 0.001, 30); // start with 0.001
+		indexMotor.config_kD(0, 200, 30); // (second) ~ 10 x kP
+        indexMotor.config_IntegralZone(0, 30, 30);
 
         indexSensor = new DigitalInput(index_sensor_ID);
 
@@ -44,6 +55,19 @@ public class Intake {
 
     void indexBall(double speed){
         indexMotor.set(ControlMode.PercentOutput, speed);
+    }
+
+    void advanceBall(){
+        indexMotor.set(ControlMode.Position, 21000);
+        intakeMotor.set(ControlMode.Follower, indexMotor.getDeviceID());
+    }
+
+    void resetAdvanceBall(){
+        indexMotor.setSelectedSensorPosition(0, 0, 0);
+    }
+
+    void displayIndexPosition(){
+        SmartDashboard.putNumber("index position", indexMotor.getSelectedSensorPosition());
     }
 
     void extendForeBar(){
