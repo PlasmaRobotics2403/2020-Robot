@@ -197,10 +197,12 @@ public class Robot extends TimedRobot {
       intake.intakeBall(Constants.MAX_INTAKE_SPEED);
     }
     else {
-      intake.indexBall(0);
-      intake.intakeBall(0);
-      intake.resetAdvanceBall();
-      ballCounted = false;
+      if(intake.getIntakePosition() > 7500) {
+        intake.indexBall(0);
+        intake.intakeBall(0);
+        intake.resetAdvanceBall();
+      }
+      ballCounted = false; 
     }
 
     if(joystick.RB.isPressed()) {

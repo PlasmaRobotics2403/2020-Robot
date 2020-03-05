@@ -30,9 +30,9 @@ public class Intake {
         indexMotor.setSelectedSensorPosition(0,0,0);
 
         indexMotor.config_kF(0, 0.667, 30); //feed forward speed
-        indexMotor.config_kP(0, 21, 30); // used to get close to position
-		indexMotor.config_kI(0, 0.001, 30); // start with 0.001
-		indexMotor.config_kD(0, 200, 30); // (second) ~ 10 x kP
+        indexMotor.config_kP(0, 11, 30); // used to get close to position
+		indexMotor.config_kI(0, 0.0005, 30); // start with 0.001
+		indexMotor.config_kD(0, 20, 30); // (second) ~ 10 x kP
         indexMotor.config_IntegralZone(0, 30, 30);
 
         indexSensor = new DigitalInput(index_sensor_ID);
@@ -43,38 +43,45 @@ public class Intake {
         limitCurrent(indexMotor);
 
         rollerMotor.setInverted(true);
+        indexMotor.setInverted(false);
+        intakeMotor.setInverted(true);
     };
 
-    void intakeBall(double speed) {
+    public void intakeBall(double speed) {
         intakeMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    void roller(double speed) {
+    public void roller(double speed) {
         rollerMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    void indexBall(double speed){
+    public void indexBall(double speed){
         indexMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    void advanceBall(){
+    public void advanceBall(){
         indexMotor.set(ControlMode.Position, 21000);
         intakeMotor.set(ControlMode.Follower, indexMotor.getDeviceID());
+        
     }
 
-    void resetAdvanceBall(){
+    public void resetAdvanceBall(){
         indexMotor.setSelectedSensorPosition(0, 0, 0);
     }
 
-    void displayIndexPosition(){
+    public double getIntakePosition() {
+        return indexMotor.getSelectedSensorPosition();
+    }
+
+    public void displayIndexPosition(){
         SmartDashboard.putNumber("index position", indexMotor.getSelectedSensorPosition());
     }
 
-    void extendForeBar(){
+    public void extendForeBar(){
         foreBarPiston.set(Value.kReverse);
     }
 
-    void retractForeBar(){
+    public void retractForeBar(){
         foreBarPiston.set(Value.kForward);
     }
 
