@@ -7,9 +7,17 @@
 
 package frc.robot;
 
+import frc.robot.auto.util.cheesypath.lib.geometry.Pose2d;
+import frc.robot.auto.util.cheesypath.lib.geometry.Pose2dWithCurvature;
+import frc.robot.auto.util.cheesypath.lib.trajectory.TrajectoryIterator;
+import frc.robot.auto.util.cheesypath.lib.trajectory.timing.TimedState;
+import frc.robot.auto.util.cheesypath.lib.util.DriveSignal;
 import frc.robot.controllers.PlasmaAxis;
+import frc.robot.loops.ILooper;
+import frc.robot.loops.Loop;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -17,12 +25,15 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 //import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
+
+
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 // Wiplib 2020 says to use edu.wpi.first.wpilibj2
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -35,18 +46,32 @@ public class Drive {
     public TalonFX rightDrive;
     public TalonFX rightDriveSlave;
 
-    private AHRS navX;
+    private final AHRS navX;
     private double gyroAngle;
     private double gyroPitch;
 
-    public Drive(int leftDriveID, int leftDriveSlaveID, int rightDriveID, int rightDriveSlaveID){
+    DriveMotionPlanner mMotionPlanner;
+    boolean mOverrideTrajectory;
+    DriveControlState mDriveControlState;
+    Pose2d error;
+    TimedState<Pose2dWithCurvature> path_setPoint;
+
+    public Drive(final int leftDriveID, final int leftDriveSlaveID, final int rightDriveID, final int rightDriveSlaveID){
       leftDrive = new TalonFX(leftDriveID);
       leftDriveSlave = new TalonFX(leftDriveSlaveID);
       rightDrive = new TalonFX(rightDriveID);
       rightDriveSlave = new TalonFX(rightDriveSlaveID);
 
       navX = new AHRS(SPI.Port.kMXP);
+
+
+
+      mMotionPlanner = new DriveMotionPlanner();
+      mOverrideTrajectory = false;
+
       
+
+
       leftDrive.configFactoryDefault();
       rightDrive.configFactoryDefault();
       leftDrive.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1);
@@ -99,10 +124,10 @@ public class Drive {
 		  rightDrive.setInverted(true);
       rightDriveSlave.setInverted(true);
       
-      leftDrive.setNeutralMode(NeutralMode.Coast);
-      rightDrive.setNeutralMode(NeutralMode.Coast);
-      leftDriveSlave.setNeutralMode(NeutralMode.Coast);
-      rightDriveSlave.setNeutralMode(NeutralMode.Coast);
+      leftDrive.setNeutralMode(NeutralMode.Brake);
+      rightDrive.setNeutralMode(NeutralMode.Brake);
+      leftDriveSlave.setNeutralMode(NeutralMode.Brake);
+      rightDriveSlave.setNeutralMode(NeutralMode.Brake);
 
       leftDrive.configClosedloopRamp(0.25);
       rightDrive.configClosedloopRamp(0.25);
@@ -110,13 +135,13 @@ public class Drive {
       rightDriveSlave.configClosedloopRamp(0.25);
     }
 
-    public void FPSDrive(PlasmaAxis forwardAxis, PlasmaAxis turnAxis) {
+    public void FPSDrive(final PlasmaAxis forwardAxis, final PlasmaAxis turnAxis) {
 
       //double forwardVal = forwardAxis.getFilteredAxis() * Math.abs(forwardAxis.getFilteredAxis());
       //double turnVal = turnAxis.getFilteredAxis() * Math.abs(turnAxis.getFilteredAxis()) * Math.abs(turnAxis.getFilteredAxis());
   
-      double forwardVal = forwardAxis.getFilteredAxis() * Math.abs(forwardAxis.getFilteredAxis()) * Math.abs(forwardAxis.getFilteredAxis());
-      double turnVal = turnAxis.getFilteredAxis() * Math.abs(turnAxis.getFilteredAxis()) * Math.abs(turnAxis.getFilteredAxis());
+      final double forwardVal = forwardAxis.getFilteredAxis() * Math.abs(forwardAxis.getFilteredAxis()) * Math.abs(forwardAxis.getFilteredAxis());
+      final double turnVal = turnAxis.getFilteredAxis() * Math.abs(turnAxis.getFilteredAxis()) * Math.abs(turnAxis.getFilteredAxis());
 
       FPSDrive(forwardVal, turnVal);
     }
@@ -136,13 +161,25 @@ public class Drive {
     public double getDistance() {
       return (toDistance(rightDrive) + toDistance(leftDrive)) / 2;
     }
+
+    public double getLeftVelocity() {
+      return leftDrive.getSelectedSensorVelocity();
+    }
+
+    public double getRightVelocity() {
+      return rightDrive.getSelectedSensorVelocity();
+    }
   
     public double getLeftDistance() {
       return toDistance(leftDrive);
     }
+
+    public double getRightDistance() {
+      return toDistance(rightDrive);
+    }
   
-    private static double toDistance(TalonFX talon) {
-      double distance = talon.getSelectedSensorPosition(talon.getDeviceID()) / Constants.DRIVE_ENCODER_CONVERSION;
+    private static double toDistance(final TalonFX talon) {
+      final double distance = talon.getSelectedSensorPosition(talon.getDeviceID()) / Constants.DRIVE_ENCODER_CONVERSION;
       // DriverStation.reportWarning(talon.getDeviceID() + " - distance: " + distance,
       // false);
       return distance;
@@ -168,15 +205,15 @@ public class Drive {
     }
   
 
-    public void FPSDrive(double forwardVal, double turnVal) {
+    public void FPSDrive(final double forwardVal, double turnVal) {
   
       turnVal *= Constants.MAX_DRIVE_TURN;
   
-      double absForward = Math.abs(forwardVal);
-      double absTurn = Math.abs(turnVal);
+      final double absForward = Math.abs(forwardVal);
+      final double absTurn = Math.abs(turnVal);
   
-      int forwardSign = (forwardVal == 0) ? 0 : (int) (forwardVal / Math.abs(forwardVal));
-      int turnSign = (turnVal == 0) ? 0 : (int) (turnVal / Math.abs(turnVal));
+      final int forwardSign = (forwardVal == 0) ? 0 : (int) (forwardVal / Math.abs(forwardVal));
+      final int turnSign = (turnVal == 0) ? 0 : (int) (turnVal / Math.abs(turnVal));
   
       double speedL;
       double speedR;
@@ -219,28 +256,28 @@ public class Drive {
 
     }
 
-    public void currentLimit(TalonFX talon) {
+    public void currentLimit(final TalonFX talon) {
       talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 30,0));
     }
     
-    public void leftWheelDrive(double speed) {
+    public void leftWheelDrive(final double speed) {
       leftDrive.set(ControlMode.PercentOutput, speed * Constants.MAX_AUTO_DRIVE_SPEED);
       leftDriveSlave.set(ControlMode.PercentOutput, speed * Constants.MAX_AUTO_DRIVE_SPEED);
       //leftDriveSlaveFront.set(ControlMode.PercentOutput, speed * Constants.MAX_AUTO_DRIVE_SPEED);
     }
   
-    public void rightWheelDrive(double speed) {
+    public void rightWheelDrive(final double speed) {
       rightDrive.set(ControlMode.PercentOutput, speed * Constants.MAX_AUTO_DRIVE_SPEED);
       rightDriveSlave.set(ControlMode.PercentOutput, speed * Constants.MAX_AUTO_DRIVE_SPEED);
       //rightDriveSlaveFront.set(ControlMode.PercentOutput, speed * Constants.MAX_AUTO_DRIVE_SPEED);
     }
 
-    public void autonTankDrive(double left, double right) {
+    public void autonTankDrive(final double left, final double right) {
       leftWheelDrive(left);
       rightWheelDrive(right);
     }
 
-    public void gyroStraight(double speed, double angle) {
+    public void gyroStraight(final double speed, final double angle) {
       if (getGyroAngle() > 0) {
         autonTankDrive(speed - 0.01 * (getGyroAngle() - angle), speed - 0.01 * (getGyroAngle() - angle));
       } else if (getGyroAngle() < 0) {
@@ -250,9 +287,9 @@ public class Drive {
       }
     }
   
-    public void pivotToAngle(double angle) {
-      double angleDiff = getGyroAngle() - angle;
-      double speed = (Math.abs(angleDiff) < 10) ? (Math.abs(angleDiff) / 10.0) * 0.15 + 0.15 : .3;
+    public void pivotToAngle(final double angle) {
+      final double angleDiff = getGyroAngle() - angle;
+      final double speed = (Math.abs(angleDiff) < 10) ? (Math.abs(angleDiff) / 10.0) * 0.15 + 0.15 : .3;
       if (angleDiff > 0) {
         autonTankDrive(-speed, speed);
       } else {
@@ -274,4 +311,97 @@ public class Drive {
       leftDrive.set(ControlMode.Follower, leftDriveSlave.getDeviceID());
     }
 
+
+    public synchronized void setTrajectory(final TrajectoryIterator<TimedState<Pose2dWithCurvature>> trajectory) {
+      if (mMotionPlanner != null) {
+          mOverrideTrajectory = false;
+          mMotionPlanner.reset();
+          mMotionPlanner.setTrajectory(trajectory);
+          mDriveControlState = DriveControlState.PATH_FOLLOWING;
+      }
+  }
+
+  public boolean isDoneWithTrajectory() {
+      if (mMotionPlanner == null || mDriveControlState != DriveControlState.PATH_FOLLOWING) {
+          return false;
+      }
+      return mMotionPlanner.isDone() || mOverrideTrajectory;
+  }
+
+  private void updatePathFollower() {
+    if (mDriveControlState == DriveControlState.PATH_FOLLOWING) {
+        final double now = Timer.getFPGATimestamp();
+
+        final DriveMotionPlanner.Output output = mMotionPlanner.update(now, RobotState.getInstance().getFieldToVehicle(now));
+
+        // DriveSignal signal = new DriveSignal(demand.left_feedforward_voltage / 12.0, demand.right_feedforward_voltage / 12.0);
+
+        error = mMotionPlanner.error();
+        path_setPoint = mMotionPlanner.setpoint();
+
+        if (!mOverrideTrajectory) {
+            setVelocity(new DriveSignal(radiansPerSecondToTicksPer100ms(output.left_velocity), radiansPerSecondToTicksPer100ms(output.right_velocity)),
+                    new DriveSignal(output.left_feedforward_voltage / 12.0, output.right_feedforward_voltage / 12.0));
+        } else {
+            setVelocity(DriveSignal.BRAKE, DriveSignal.BRAKE);
+        }
+    } else {
+        DriverStation.reportError("Drive is not in path following state", false);
+    }
+  }
+
+  private static double radiansPerSecondToTicksPer100ms(final double rad_s) {
+    return rad_s / (Math.PI * 2.0) * 4096.0 / 10.0;
+  }
+
+  public synchronized void setVelocity(final DriveSignal signal, final DriveSignal feedForward) {
+    leftDrive.set(ControlMode.Velocity, signal.getLeft(), DemandType.ArbitraryFeedForward, feedForward.getLeft());
+    rightDrive.set(ControlMode.Velocity, signal.getRight(), DemandType.ArbitraryFeedForward, feedForward.getRight());
+    leftDriveSlave.set(ControlMode.Follower, leftDrive.getDeviceID());
+    rightDriveSlave.set(ControlMode.Follower, rightDrive.getDeviceID());
+  }
+
+  private final Loop mLoop = new Loop() {
+    @Override
+    public void onStart(final double timestamp) {
+      synchronized (Drive.this) {
+        // startLogging();
+      }
+    }
+
+    @Override
+    public void onLoop(final double timestamp) {
+      synchronized (Drive.this) {
+        switch (mDriveControlState) {
+          case OPEN_LOOP:
+            break;
+          case PATH_FOLLOWING:
+            updatePathFollower();
+            break;
+          default:
+            System.out.println("Unexpected drive control state: " + mDriveControlState);
+            break;
+        }
+        /*
+         * // TODO: fix this (tom) if (mAutoShift) { handleAutoShift(); } else
+         */
+        {
+          // setHighGear(false);
+        }
+      }
+    }
+
+    @Override
+    public void onStop(final double timestamp) {
+  }
+};
+
+public void registerEnabledLoops(ILooper in) {
+  in.register(mLoop);
+}
+
+  public enum DriveControlState {
+    OPEN_LOOP, // open loop voltage control
+    PATH_FOLLOWING, // velocity PID control
+  }
 }

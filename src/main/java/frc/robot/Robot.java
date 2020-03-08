@@ -8,13 +8,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
-
+import frc.robot.auto.util.cheesypath.lib.TrajectoryGenerator;
+import frc.robot.auto.util.cheesypath.lib.util.CrashTracker;
 import frc.robot.controllers.PlasmaJoystick;
-
+import frc.robot.loops.Looper;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -55,6 +55,9 @@ public class Robot extends TimedRobot {
   int ballCounter;
   boolean ballCounted;
 
+  Looper looper;
+  TrajectoryGenerator trajectoryGnerator;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -75,15 +78,14 @@ public class Robot extends TimedRobot {
 
     intake = new Intake(Constants.INTAKE_ID,
                         Constants.INDEXER_ID,
-                        Constants.INTAKE_FORWARD_ID,
-                        Constants.INTAKE_REVERSE_ID,
-                        Constants.INDEX_SENSOR_ID,
+                        Constants.INTAKE_SOLENOID_ID,
+                        Constants.FRONT_INDEX_SENSOR_ID,
+                        Constants.BACK_INDEX_SENSOR_ID,
                         Constants.ROLLER_MOTOR_ID);
 
     climb = new Climb(Constants.LEFT_CLIMB_MOTOR_ID,
                       Constants.RIGHT_CLIMB_MOTOR_ID,
-                      Constants.CLIMB_LATCH_ID,
-                      Constants.CLIMB_LATCH_PLUG_ID);
+                      Constants.CLIMB_LATCH_ID);
 
     controlPanel = new ControlPanel(Constants.SPIN_CONTROL_PANEL_MOTOR_ID);
 
@@ -99,6 +101,9 @@ public class Robot extends TimedRobot {
 
     ballCounter = 0;
     ballCounted = false;
+
+
+    
   }
 
   /**
@@ -130,7 +135,11 @@ public class Robot extends TimedRobot {
     shooter.displayHoodPosition();
     SmartDashboard.putNumber("shooter percent", shooter.getShooterPercentOutput());
 
-    SmartDashboard.putBoolean("sensor state", intake.getIndexSensorState());
+    turret.displayTurretPosition();
+    shooter.displayShooterRPM();
+
+    SmartDashboard.putBoolean("front sensor state", intake.getFrontIndexSensorState());
+    SmartDashboard.putBoolean("back sensor state", intake.getBackIndexSensorState());
     intake.displayIndexPosition();
     SmartDashboard.putNumber("ball count", ballCounter);
   }
@@ -140,7 +149,10 @@ public class Robot extends TimedRobot {
     climb.engageLatch();
     intake.resetAdvanceBall();
     ballCounted = false;
-    //intake.retractForeBar();
+    ballCounter = 0;
+    intake.retractForeBar();
+    intake.resetAdvanceBall();
+    turret.resetTurretPosition();
   }
 
   public void disabledPeriodic() {
@@ -183,9 +195,9 @@ public class Robot extends TimedRobot {
 
   public void driverControls(final PlasmaJoystick joystick) {
     driveTrain.FPSDrive(joystick.LeftY, joystick.RightX);
-    //visionTurretLineUp();
+    visionTurretLineUp();
 
-    if(intake.getIndexSensorState() == false) {
+    /*if(intake.getFrontIndexSensorState() == false) {
       intake.advanceBall();
       if(ballCounted == false){
         ballCounter ++;
@@ -203,14 +215,76 @@ public class Robot extends TimedRobot {
         intake.resetAdvanceBall();
       }
       ballCounted = false; 
+    }*/
+
+
+    if(joystick.LB.isPressed()){
+      intake.indexBall(-Constants.MAX_INDEX_SPEED);
+      intake.intakeBall(-Constants.MAX_INTAKE_SPEED);
+      intake.roller(-Constants.MAX_ROLLER_SPEED);
+      ballCounter = 0;
+    }
+    else if(joystick.RT.isPressed()){
+      shooter.autoHood(distance);
+      shooter.shoot(Constants.MAX_SHOOTER_SPEED);
+      ballCounter = 0;
+      if(shooter.getShooterRPM() > 15000 && shooter.getHoodPosition() > shooter.getTargetAngle() - shooter.getErrorRange() && shooter.getHoodPosition() < shooter.getTargetAngle() + shooter.getErrorRange()) {
+        shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
+        intake.indexBall(Constants.MAX_INDEX_SPEED);
+        intake.intakeBall(Constants.MAX_INDEX_SPEED);
+      }
+    }
+    else if(joystick.LT.isPressed()){
+      shooter.shoot(Constants.MAX_SHOOTER_SPEED);
+    }
+    else if(intake.getBackIndexSensorState() == false){
+      intake.indexBall(0);
+      intake.intakeBall(0);
+      intake.roller(0);
+    }
+    else if(ballCounter == 5){
+      intake.indexBall(0);
+      intake.intakeBall(0);
+      intake.roller(0);
+    } 
+    else if(joystick.RB.isPressed()){
+      intake.roller(Constants.MAX_ROLLER_SPEED);
+      if(intake.getFrontIndexSensorState() == false) {
+        intake.advanceBall();
+        if(ballCounted == false && ballCounter < 4){
+          ballCounter ++;
+          ballCounted = true;
+        }
+      }
+      else {
+        if(intake.getIntakePosition() > 55000) {
+          intake.indexBall(0);
+          intake.intakeBall(0);
+          intake.resetAdvanceBall();
+          if(ballCounter == 4){
+            ballCounter ++;
+          }
+        }
+        ballCounted = false;
+      }
+    }
+    else {
+      intake.roller(0);
+      intake.intakeBall(0);
+      intake.indexBall(0);
+      shooter.feedBalls(0);
+      shooter.shoot(0);
+      intake.resetAdvanceBall();
+      shooter.hoodHidden();
     }
 
-    if(joystick.RB.isPressed()) {
+
+    /*if(joystick.RB.isPressed()) {
       intake.roller(Constants.MAX_ROLLER_SPEED);
     }
     else {
       intake.roller(0);
-    }
+    }*/
 
   
 
@@ -241,11 +315,13 @@ public class Robot extends TimedRobot {
       //retract control panel
     }
 
-    if(joystick.RT.isPressed()){
+    /*if(joystick.RT.isPressed()){
       shooter.autoHood(distance);
       shooter.shoot(Constants.MAX_SHOOTER_SPEED);
       if(shooter.getShooterPercentOutput() >= (Constants.MAX_SHOOTER_SPEED - .03) && shooter.getHoodPosition() > shooter.getTargetAngle() - shooter.getErrorRange() && shooter.getHoodPosition() < shooter.getTargetAngle() + shooter.getErrorRange()) {
         shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
+        intake.indexBall(Constants.MAX_INDEX_SPEED);
+        intake.intakeBall(Constants.MAX_INDEX_SPEED);
       }
     }
     else {
@@ -256,7 +332,7 @@ public class Robot extends TimedRobot {
     }
     if(joystick.X.isPressed()) {
       shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
-    }
+    }*/
 
     if(joystick.dPad.getPOV() == 0)  {
       climb.releaseLatch();
@@ -265,12 +341,12 @@ public class Robot extends TimedRobot {
     if(joystick.dPad.getPOV() == 180) {
       climb.spoolCable(Constants.MAX_SPOOL_SPEED);
     }
-    else if(joystick.LT.isPressed()) {
-      climb.spoolCable(-1);
-    }
-    else {
-      climb.spoolCable(0);
-    }
+    //else if(joystick.LT.isPressed()) {
+    //  climb.spoolCable(-1);
+    //}
+    //else {
+    //  climb.spoolCable(0);
+    //}
   }
 
   public void visionLineUp() {
@@ -292,10 +368,10 @@ public class Robot extends TimedRobot {
       turret.turn(0);
     }
     else {
-      double turnVal = vision_X / 10;
-      turnVal = Math.min(turnVal, 1);
-      turnVal = Math.max(-1, turnVal);
-      turret.turn(-turnVal);
+      double turnVal = vision_X / 20;
+      turnVal = Math.min(turnVal, 0.2);
+      turnVal = Math.max(-0.2, turnVal);
+      turret.turn(turnVal);
     }
   }
 

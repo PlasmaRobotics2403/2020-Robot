@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.revrobotics.ColorMatch;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Color;
 
 public class Constants {
@@ -29,15 +30,13 @@ public class Constants {
 	public static final int RIGHT_CLIMB_MOTOR_ID = 15;
 	public static final int ROLLER_MOTOR_ID = 16;
 	
-
 	/* PNUEMATIC CONSTANTS */
-	public static final int INTAKE_FORWARD_ID = 0;
-	public static final int INTAKE_REVERSE_ID = 1;
-	public static final int CLIMB_LATCH_ID = 2;
-	public static final int CLIMB_LATCH_PLUG_ID = 3;
+	public static final int INTAKE_SOLENOID_ID = 0;
+	public static final int CLIMB_LATCH_ID = 1;
 
 	/* DIO ID CONSTANTS */
-	public static final int INDEX_SENSOR_ID = 0;
+	public static final int FRONT_INDEX_SENSOR_ID = 0;
+	public static final int BACK_INDEX_SENSOR_ID = 1;
 
 	/* DRIVETRAIN CONSTANTS */
 	public static final double MAX_AUTO_DRIVE_SPEED = 0.9;
@@ -72,8 +71,8 @@ public class Constants {
 	public static final double MAX_CONTROL_PANEL_SPEED = 1;
 
 	/* VISION CONSTANTS */
-	public static final double CAMERA_HEIGHT = 24.5; //inches
-	public static final double CAMERA_ANGLE = 0; //degrees
+	public static final double CAMERA_HEIGHT = 25.5; //inches
+	public static final double CAMERA_ANGLE = 24; //degrees
 	public static final double OUTERPORT_HEIGHT = 98; // inches
 	public static final double x2_ZOOM_Y_CONVERION = 1.077;
 	public static final double LIMELIGHT_PAN = 6.468;
@@ -81,7 +80,10 @@ public class Constants {
 	/* TALON CONFIG CONSTANTS */
 	public static final int TALON_TIMEOUT = 30;
 
-	
+	/* AUTO CONSTRAINTS */
+	public static final double kMaxSpeedMetersPerSecond = 0;
+	public static final double kMaxAccelerationMetersPerSecondSquared = 0;
+	public static final DifferentialDriveKinematics kDriveKinematics = null;
 	
 
 }

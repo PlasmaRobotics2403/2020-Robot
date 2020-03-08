@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -35,8 +36,10 @@ public class Shooter {
         // limitCurrent(backRollerMotor);
 
         leftFlyWheelMotor.setInverted(false);
+        leftFlyWheelMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         leftFlyWheelMotor.setSelectedSensorPosition(0,0,0);
         rightFlyWheelMotor.setInverted(true);
+        rightFlyWheelMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         rightFlyWheelMotor.setSelectedSensorPosition(0,0,0);
 
         hoodMotor.setInverted(false);
@@ -71,6 +74,10 @@ public class Shooter {
         return -leftFlyWheelMotor.getSelectedSensorVelocity();
     }
 
+    public void displayShooterRPM() {
+        SmartDashboard.putNumber("Shooter RPM", -leftFlyWheelMotor.getSelectedSensorVelocity());
+    }
+
     public double getShooterPercentOutput() {
         return -leftFlyWheelMotor.getMotorOutputPercent();
     }
@@ -96,7 +103,7 @@ public class Shooter {
     //}
 
     public void autoHood(double distance) {
-        targetAngle = (77) * (-0.0135 * distance + 90.002);//(-80 * distance) + 7800;
+        targetAngle = (75) * (-0.0135 * distance + 90.002);//(-80 * distance) + 7800;
         SmartDashboard.putNumber("target angle", targetAngle);
         errorRange = targetAngle * Constants.ANGLE_ERROR_PERCENT;
         SmartDashboard.putNumber("angle error range", errorRange);

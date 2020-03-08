@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,13 +16,14 @@ public class Intake {
     TalonSRX indexMotor;
     VictorSPX rollerMotor;
 
-    DigitalInput indexSensor;
+    DigitalInput frontIndexSensor;
+    DigitalInput backIndexSensor;
 
-    DoubleSolenoid foreBarPiston;
+    Solenoid foreBarPiston;
 
     double speed;
 
-    Intake(int intake_motor_ID, int indexer_motor_ID, int intake_forward_ID, int intake_reverse_ID, int index_sensor_ID, int roller_motor_ID) {
+    Intake(int intake_motor_ID, int indexer_motor_ID, int intake_solenoid_ID, int front_index_sensor_ID, int back_index_sensor_ID, int roller_motor_ID) {
         intakeMotor = new TalonSRX(intake_motor_ID);
         indexMotor = new TalonSRX(indexer_motor_ID);
         rollerMotor = new VictorSPX(roller_motor_ID);
@@ -35,16 +37,17 @@ public class Intake {
 		indexMotor.config_kD(0, 20, 30); // (second) ~ 10 x kP
         indexMotor.config_IntegralZone(0, 30, 30);
 
-        indexSensor = new DigitalInput(index_sensor_ID);
+        frontIndexSensor = new DigitalInput(front_index_sensor_ID);
+        backIndexSensor = new DigitalInput(back_index_sensor_ID);
 
-        foreBarPiston = new DoubleSolenoid(intake_forward_ID, intake_reverse_ID);
+        foreBarPiston = new Solenoid(intake_solenoid_ID);
 
         limitCurrent(intakeMotor);
         limitCurrent(indexMotor);
 
-        rollerMotor.setInverted(true);
-        indexMotor.setInverted(false);
-        intakeMotor.setInverted(true);
+        rollerMotor.setInverted(false);
+        indexMotor.setInverted(true);
+        intakeMotor.setInverted(false);
     };
 
     public void intakeBall(double speed) {
@@ -60,7 +63,7 @@ public class Intake {
     }
 
     public void advanceBall(){
-        indexMotor.set(ControlMode.Position, 21000);
+        indexMotor.set(ControlMode.Position, 55000);
         intakeMotor.set(ControlMode.Follower, indexMotor.getDeviceID());
         
     }
@@ -78,11 +81,11 @@ public class Intake {
     }
 
     public void extendForeBar(){
-        foreBarPiston.set(Value.kReverse);
+        foreBarPiston.set(true);
     }
 
     public void retractForeBar(){
-        foreBarPiston.set(Value.kForward);
+        foreBarPiston.set(false);
     }
 
     public void limitCurrent(TalonSRX talon) {
@@ -93,7 +96,11 @@ public class Intake {
         talon.configClosedloopRamp(1);
     }
 
-    public boolean getIndexSensorState() {
-        return indexSensor.get();
+    public boolean getFrontIndexSensorState() {
+        return frontIndexSensor.get();
+    }
+
+    public boolean getBackIndexSensorState() {
+        return backIndexSensor.get();
     }
 }
