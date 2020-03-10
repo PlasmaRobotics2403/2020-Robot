@@ -37,11 +37,14 @@ public class Straight implements Action{
             DriverStation.reportWarning("broke", false);
         }
         drive.zeroGyro();
+        if(intaking){
+            intake.extendForeBar();
+        }
     }
 
     @Override
     public void update(){
-        drive.autonTankDrive(speed,speed);
+        drive.gyroStraight(speed, 0);
         if(intaking){
             intake.roller(Constants.MAX_ROLLER_SPEED);
             if(intake.getFrontIndexSensorState() == false){

@@ -280,9 +280,9 @@ public class Drive {
 
     public void gyroStraight(final double speed, final double angle) {
       if (getGyroAngle() > 0) {
-        autonTankDrive(speed - 0.01 * (getGyroAngle() - angle), speed - 0.01 * (getGyroAngle() - angle));
+        autonTankDrive(speed - 0.01 * (getGyroAngle() - angle), speed + 0.01 * (getGyroAngle() - angle));
       } else if (getGyroAngle() < 0) {
-        autonTankDrive(speed - 0.01 * (getGyroAngle() + angle), speed - 0.01 * (getGyroAngle() + angle));
+        autonTankDrive(speed + 0.01 * (getGyroAngle() + angle), speed - 0.01 * (getGyroAngle() + angle));
       } else {
         autonTankDrive(speed - 0.01 * (getGyroAngle() + angle), speed - 0.01 * (getGyroAngle() + angle));
       }

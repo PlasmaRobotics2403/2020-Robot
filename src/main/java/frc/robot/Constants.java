@@ -38,8 +38,8 @@ public class Constants {
 	/* DIO ID CONSTANTS */
 	public static final int FRONT_INDEX_SENSOR_ID = 0;
 	public static final int BACK_INDEX_SENSOR_ID = 1;
-	public static final int MAX_LIMIT_SWITCH_ID = 2;
-	public static final int MIN_LIMIT_SWITCH_ID = 3;
+	public static final int MAX_LIMIT_SWITCH_ID = 3;
+	public static final int MIN_LIMIT_SWITCH_ID = 2;
 
 	/* DRIVETRAIN CONSTANTS */
 	public static final double MAX_AUTO_DRIVE_SPEED = 0.9;
@@ -57,7 +57,7 @@ public class Constants {
 	/* INTAKE CONSTANTS */
 	public static final double MAX_INDEX_SPEED = 0.9;
 	public static final double MAX_INTAKE_SPEED = 0.9;
-	public static final double MAX_ROLLER_SPEED = 0.5;
+	public static final double MAX_ROLLER_SPEED = 0.75;
 
 	/* TURRET CONSTANTS */
 	public static final double MAX_TURRET_SPEED = 1; 

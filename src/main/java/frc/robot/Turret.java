@@ -40,11 +40,21 @@ public class Turret {
         if(turretRotationMotor.getSelectedSensorPosition() > -16500 && turretRotationMotor.getSelectedSensorPosition() < 9500){
             turnVal *= Constants.MAX_TURRET_SPEED;
         }
-        else if(turretRotationMotor.getSelectedSensorPosition() < -16500 && turnVal > 0){
-            turnVal *= Constants.MAX_TURRET_SPEED;
+        else if(turretRotationMotor.getSelectedSensorPosition() < -16500 || !minLimit.get()){
+            if(turnVal > 0){
+                turnVal *= Constants.MAX_TURRET_SPEED;
+            }
+            else{
+                turnVal = 0;
+            }
         }
-        else if(turretRotationMotor.getSelectedSensorPosition() > 9500 && turnVal < 0){
-            turnVal *= Constants.MAX_TURRET_SPEED;
+        else if(turretRotationMotor.getSelectedSensorPosition() > 9400 || !maxLimit.get()){
+            if(turnVal < 0){
+                turnVal *= Constants.MAX_TURRET_SPEED;
+            }
+            else {
+                turnVal = 0;
+            }
         }
         else {
             turnVal = 0;
@@ -62,6 +72,14 @@ public class Turret {
 
     public double getTurretPosition(){
         return turretRotationMotor.getSelectedSensorPosition();
+    }
+
+    public boolean displayMaxLimit(){
+        return maxLimit.get();
+    }
+
+    public boolean displayMinLimit(){
+        return minLimit.get();
     }
 
     public void displayTurretPosition(){

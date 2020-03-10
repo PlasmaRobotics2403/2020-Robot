@@ -1,10 +1,7 @@
 package frc.robot.auto.actions;
 
 import frc.robot.auto.util.Action;
-import frc.robot.Constants;
-import frc.robot.Drive;
 import frc.robot.Intake;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class IntakeRoller implements Action{

@@ -112,6 +112,8 @@ public class Robot extends TimedRobot {
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
 
+    table.getEntry("ledMode").setNumber(1);
+
     ballCounter = 0;
     ballCounted = false;
 
@@ -122,6 +124,8 @@ public class Robot extends TimedRobot {
     }
 
     autoModeSelection = 0;
+
+    intake.retractForeBar();
   }
 
   /**
@@ -143,6 +147,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("LimelightY", vision_Y);
     SmartDashboard.putNumber("LimelightArea", vision_Area);
 
+    autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
+    SmartDashboard.putNumber("Auton Mode", autoModeSelection);
+
     //distance = (Constants.OUTERPORT_HEIGHT - Constants.CAMERA_HEIGHT) / Math.tan(Math.toRadians(vision_Y) + Math.toRadians(Constants.CAMERA_ANGLE) + Constants.LIMELIGHT_PAN);
     //distance /= 12; // convert from inches to feet
     //distance /= Constants.x2_ZOOM_Y_CONVERION; // conversion from x1 zoom to x2 zoom
@@ -156,6 +163,10 @@ public class Robot extends TimedRobot {
     turret.displayTurretPosition();
     shooter.displayShooterRPM();
     SmartDashboard.putNumber("drive Distance", driveTrain.getDistance());
+    SmartDashboard.putBoolean("Turret min limit", turret.displayMinLimit());
+    SmartDashboard.putBoolean("turret max limit", turret.displayMaxLimit());
+
+    SmartDashboard.putNumber("gyro angle", driveTrain.getGyroAngle());
 
     SmartDashboard.putBoolean("front sensor state", intake.getFrontIndexSensorState());
     SmartDashboard.putBoolean("back sensor state", intake.getBackIndexSensorState());
@@ -169,9 +180,10 @@ public class Robot extends TimedRobot {
     intake.resetAdvanceBall();
     ballCounted = false;
     ballCounter = 0;
-    intake.retractForeBar();
+    //intake.retractForeBar();
     intake.resetAdvanceBall();
     turret.resetTurretPosition();
+    table.getEntry("ledMode").setNumber(1);
   }
 
   public void disabledPeriodic() {
@@ -197,10 +209,11 @@ public class Robot extends TimedRobot {
     driveTrain.resetEncoders();
     driveTrain.zeroGyro();
 
-    autoModes[0] = new MoveFromLine(driveTrain, turret, shooter, intake, table);
-    autoModes[1] = new TrenchRun(driveTrain, turret, shooter, intake, table);
+    autoModes[0] = new Nothing();
+    autoModes[1] = new MoveFromLine(driveTrain, turret, shooter, intake, table);
+    autoModes[2] = new TrenchRun(driveTrain, turret, shooter, intake, table);
 
-    autoModeRunner.chooseAutoMode(autoModes[1]);
+    autoModeRunner.chooseAutoMode(autoModes[autoModeSelection]);
     autoModeRunner.start();
   }
 
@@ -215,6 +228,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     autoModeRunner.stop();
+    shooter.hoodHidden();
   }
   
   @Override
@@ -232,6 +246,7 @@ public class Robot extends TimedRobot {
       intake.indexBall(-Constants.MAX_INDEX_SPEED);
       intake.intakeBall(-Constants.MAX_INTAKE_SPEED);
       intake.roller(-Constants.MAX_ROLLER_SPEED);
+      shooter.feedBalls(-Constants.MAX_BALL_FEED_SPEED);
       ballCounter = 0;
     }
     else if(joystick.RT.isPressed()){
@@ -321,6 +336,7 @@ public class Robot extends TimedRobot {
 
   public void visionControls(final PlasmaJoystick joystick, final PlasmaJoystick joystick2) {
     if(joystick.RT.isPressed() || joystick.LT.isPressed()){
+      table.getEntry("ledMode").setNumber(3);
       visionTurretLineUp();
     }
     else if(joystick2.X.isPressed()){
@@ -334,6 +350,7 @@ public class Robot extends TimedRobot {
     }
     else {
       turret.turn(0);
+      table.getEntry("ledMode").setNumber(1);
     }
   }
 

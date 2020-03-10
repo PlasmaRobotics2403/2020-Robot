@@ -103,7 +103,7 @@ public class Shooter {
     //}
 
     public void autoHood(double distance) {
-        targetAngle = (75) * (-0.0135 * distance + 90.002);//(-80 * distance) + 7800;
+        targetAngle = (75) * (-0.0155 * distance + 90.002);//(-80 * distance) + 7800;
         SmartDashboard.putNumber("target angle", targetAngle);
         errorRange = targetAngle * Constants.ANGLE_ERROR_PERCENT;
         SmartDashboard.putNumber("angle error range", errorRange);

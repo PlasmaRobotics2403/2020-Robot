@@ -2,12 +2,9 @@ package frc.robot.auto.actions;
 
 import frc.robot.auto.util.Action;
 import frc.robot.Constants;
-import frc.robot.Drive;
 import frc.robot.Intake;
 import frc.robot.Shooter;
 import frc.robot.Turret;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
@@ -59,6 +56,7 @@ public class Shoot implements Action{
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
         ta = table.getEntry("ta");
+        table.getEntry("ledMode").setNumber(3);
 
         ballCount = 5;
         ballCounted = false;
@@ -91,7 +89,7 @@ public class Shoot implements Action{
         if(shooter.getShooterRPM() > 14500 && shooter.getHoodPosition() > shooter.getTargetAngle() - shooter.getErrorRange() && shooter.getHoodPosition() < shooter.getTargetAngle() + shooter.getErrorRange()) {
             shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
             intake.indexBall(Constants.MAX_INDEX_SPEED);
-            intake.intakeBall(Constants.MAX_INDEX_SPEED);
+            intake.intakeBall(Constants.MAX_INTAKE_SPEED);
             
             if(intake.getBackIndexSensorState() && ballCounted == false){
                 ballCount --;
@@ -100,6 +98,11 @@ public class Shoot implements Action{
             else{
                 ballCounted = false;
             }
+        }
+        else {
+            shooter.feedBalls(0);
+            intake.indexBall(0);
+            intake.intakeBall(0);
         }
     }
 
@@ -110,5 +113,6 @@ public class Shoot implements Action{
         intake.intakeBall(0);
         intake.indexBall(0);
         turret.turn(0);
+        table.getEntry("ledMode").setNumber(1);
     }
 }
