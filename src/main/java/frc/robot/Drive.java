@@ -77,7 +77,7 @@ public class Drive {
       leftDrive.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1);
 		  rightDrive.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1);
 
-      leftDrive.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+      leftDrive.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
 		  leftDrive.setSensorPhase(true);
 		  leftDrive.configClosedloopRamp(0);
 		  leftDrive.configNominalOutputForward(0, 30);
@@ -91,7 +91,7 @@ public class Drive {
       leftDrive.config_IntegralZone(0, 0, 30);
       
 
-		  rightDrive.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+		  rightDrive.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
 		  rightDrive.setSensorPhase(true);
 		  rightDrive.configClosedloopRamp(0);
 		  rightDrive.configNominalOutputForward(0, 30);
@@ -179,7 +179,7 @@ public class Drive {
     }
   
     private static double toDistance(final TalonFX talon) {
-      final double distance = talon.getSelectedSensorPosition(talon.getDeviceID()) / Constants.DRIVE_ENCODER_CONVERSION;
+      final double distance = talon.getSelectedSensorPosition(talon.getDeviceID()) * Constants.DRIVE_ENCODER_CONVERSION;
       // DriverStation.reportWarning(talon.getDeviceID() + " - distance: " + distance,
       // false);
       return distance;

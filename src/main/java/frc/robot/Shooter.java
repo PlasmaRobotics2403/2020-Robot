@@ -66,8 +66,8 @@ public class Shooter {
     }
 
     public void spinToRPM(double RPM) {
-        leftFlyWheelMotor.set(ControlMode.Velocity, Constants.FLY_WHEEL_RADIUS * RPM * Constants.RPM_TO_RAD_PER_SEC_CONVERSION);
-        rightFlyWheelMotor.set(ControlMode.Velocity, Constants.FLY_WHEEL_RADIUS * RPM * Constants.RPM_TO_RAD_PER_SEC_CONVERSION);
+        leftFlyWheelMotor.set(ControlMode.Velocity, -RPM);
+        rightFlyWheelMotor.set(ControlMode.Velocity, -RPM);
     }
 
     public double getShooterRPM() {

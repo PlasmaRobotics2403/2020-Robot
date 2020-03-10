@@ -1,31 +1,32 @@
 package frc.robot.auto.actions;
 
 import frc.robot.auto.util.Action;
+import frc.robot.Constants;
 import frc.robot.Drive;
+import frc.robot.Intake;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class Straight implements Action{
     double speed;
-    double speedPValue;
-    double minSpeed;
-    double fullSpeedTime;
-    double fullStartTime;
+    double distance; //inches
 
     Drive drive;
+    Intake intake;
 
-    public Straight(double speed, Drive drive){
+    boolean intaking;
+
+    public Straight(double speed, double distance, Drive drive, boolean intaking, Intake intake){
         this.speed = Math.abs(speed);
-
-		this.drive = drive;
-		speedPValue = .005;
-		minSpeed = .3 * this.speed / Math.abs(this.speed);
-        fullSpeedTime = .12;
+        this.distance = distance;
+        this.drive = drive;
+        this.intaking = intaking;
+        this.intake = intake;
     }
 
     @Override
     public boolean isFinished() {
-        return drive.getDistance() < 4;
+        return Math.abs(drive.getDistance()) > distance;
     }
 
     @Override
@@ -36,12 +37,17 @@ public class Straight implements Action{
             DriverStation.reportWarning("broke", false);
             }
             drive.zeroGyro();
-        fullStartTime = Timer.getFPGATimestamp();
     }
 
     @Override
     public void update(){
         drive.autonTankDrive(speed,speed);
+        if(intaking){
+            intake.roller(Constants.MAX_ROLLER_SPEED);
+            if(intake.getFrontIndexSensorState() == false){
+                intake.advanceBall();
+            }
+        }
     }
 
     public void end() {

@@ -19,15 +19,15 @@ import frc.robot.Turret;
 /**
  *
  */
-public class MoveFromLine extends AutoMode {
+public class TrenchRun extends AutoMode {
 	Drive driveTrain;
 	Turret turret;
 	Shooter shooter;
 	Intake intake;
 	NetworkTable table;
 
-    public MoveFromLine(Drive drivetrain, Turret turret, Shooter shooter, Intake intake, NetworkTable table) {
-		this.driveTrain = drivetrain;
+    public TrenchRun(Drive driveTrain, Turret turret, Shooter shooter, Intake intake, NetworkTable table) {
+		this.driveTrain = driveTrain;
 		this.turret = turret;
 		this.shooter = shooter;
 		this.intake = intake;
@@ -41,8 +41,10 @@ public class MoveFromLine extends AutoMode {
 	@Override
 	protected void routine() throws AutoModeEndedException {
 		runAction(new Straight(0.2, 24, driveTrain, false, intake));
-		//runAction(new SetTurretPosition(6900, turret));
-		runAction(new Shoot(turret, shooter, intake, table, 6900));
+		////runAction(new SetTurretPosition(6000, turret));
+        //runAction(new Shoot(turret, shooter, intake, table, 6500));
+        //runAction(new Straight(0.2, 120, driveTrain, true, intake));
+        //runAction(new Shoot(turret, shooter, intake, table, 6700));
 	}
 
 }

@@ -11,6 +11,7 @@ public class Constants {
 
 	/* CONTROLLER CONSTANTS */
 	public static final int JOYSTICK1_PORT = 0;
+	public static final int JOYSTICK2_PORT = 1;
 
 	/* MOTOR ID CONSTANTS */
 	public static final int R_DRIVE_ID = 1; // right side motor farthest from talons
@@ -37,16 +38,18 @@ public class Constants {
 	/* DIO ID CONSTANTS */
 	public static final int FRONT_INDEX_SENSOR_ID = 0;
 	public static final int BACK_INDEX_SENSOR_ID = 1;
+	public static final int MAX_LIMIT_SWITCH_ID = 2;
+	public static final int MIN_LIMIT_SWITCH_ID = 3;
 
 	/* DRIVETRAIN CONSTANTS */
 	public static final double MAX_AUTO_DRIVE_SPEED = 0.9;
 	public static final double MAX_DRIVE_SPEED = 1;
 	public static final double MAX_DRIVE_TURN = 0.75;
-	public static final double DRIVE_ENCODER_CONVERSION = 0.004665594;
+	public static final double DRIVE_ENCODER_CONVERSION = 0.036; // ticks to inches
 
 	/* SHOOTER CONSTANTS */
 	public static final double MAX_SHOOTER_SPEED = 0.8;
-	public static final double MAX_BALL_FEED_SPEED = 0.9;
+	public static final double MAX_BALL_FEED_SPEED = 0.7;
 	public static final double FLY_WHEEL_RADIUS = 0.0635; //meters
 	public static final double RPM_TO_RAD_PER_SEC_CONVERSION = 0.104719755;
 	public static final double ANGLE_ERROR_PERCENT = 0.04;
