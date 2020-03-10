@@ -35,8 +35,8 @@ public class Straight implements Action{
         while(Math.abs(drive.getDistance()) > 1){
             drive.resetEncoders();
             DriverStation.reportWarning("broke", false);
-            }
-            drive.zeroGyro();
+        }
+        drive.zeroGyro();
     }
 
     @Override
@@ -47,10 +47,18 @@ public class Straight implements Action{
             if(intake.getFrontIndexSensorState() == false){
                 intake.advanceBall();
             }
+            if(intake.getIntakePosition() > 55000) {
+                intake.indexBall(0);
+                intake.intakeBall(0);
+                intake.resetAdvanceBall();
+            }
         }
     }
 
     public void end() {
+        if(intaking == true){
+            //intake.roller(0);
+        }
         drive.stopDrive();
         DriverStation.reportWarning("done", false);
     }

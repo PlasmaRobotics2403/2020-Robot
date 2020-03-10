@@ -42,7 +42,7 @@ public class MoveFromLine extends AutoMode {
 	protected void routine() throws AutoModeEndedException {
 		runAction(new Straight(0.2, 24, driveTrain, false, intake));
 		//runAction(new SetTurretPosition(6900, turret));
-		runAction(new Shoot(turret, shooter, intake, table, 6900));
+		runAction(new Shoot(turret, shooter, intake, table, 6900, false));
 	}
 
 }

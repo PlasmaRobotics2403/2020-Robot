@@ -159,7 +159,8 @@ public class Drive {
     }
 
     public double getDistance() {
-      return (toDistance(rightDrive) + toDistance(leftDrive)) / 2;
+      //return (toDistance(rightDrive) + toDistance(leftDrive)) / 2;
+      return toDistance(leftDrive);
     }
 
     public double getLeftVelocity() {

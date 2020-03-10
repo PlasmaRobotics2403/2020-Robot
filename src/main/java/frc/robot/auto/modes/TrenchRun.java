@@ -1,5 +1,6 @@
 package frc.robot.auto.modes;
 
+import frc.robot.auto.actions.IntakeRoller;
 import frc.robot.auto.actions.SetTurretPosition;
 import frc.robot.auto.actions.Shoot;
 import frc.robot.auto.actions.Straight;
@@ -40,11 +41,12 @@ public class TrenchRun extends AutoMode {
 	 */
 	@Override
 	protected void routine() throws AutoModeEndedException {
-		runAction(new Straight(0.2, 24, driveTrain, false, intake));
+		runAction(new Straight(0.2, 68, driveTrain, false, intake));
 		////runAction(new SetTurretPosition(6000, turret));
-        //runAction(new Shoot(turret, shooter, intake, table, 6500));
-        //runAction(new Straight(0.2, 120, driveTrain, true, intake));
-        //runAction(new Shoot(turret, shooter, intake, table, 6700));
+		runAction(new Shoot(turret, shooter, intake, table, 6500, false));
+		runAction(new IntakeRoller(intake));
+        runAction(new Straight(0.2, 175, driveTrain, true, intake));
+        runAction(new Shoot(turret, shooter, intake, table, 6700, true));
 	}
 
 }

@@ -28,10 +28,11 @@ public class Shoot implements Action{
 
     int ballCount;
     boolean ballCounted;
+    boolean neverEnd;
 
     double position;
 
-    public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double position){
+    public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double position, boolean neverEnd){
         this.turret = turret;
         this.shooter = shooter;
         this.intake = intake;
@@ -39,11 +40,18 @@ public class Shoot implements Action{
         distance = 0;
         vision_Area = 0;
         this.position = position;
+        this.neverEnd = neverEnd;
     }
 
     @Override
     public boolean isFinished() {
-        return ballCount == 0;
+        if(neverEnd) {
+            return false;
+        }
+        else{
+            return ballCount == 0;
+        }
+        
     }
 
     @Override
@@ -98,6 +106,7 @@ public class Shoot implements Action{
     public void end() {
         shooter.hoodHidden();
         shooter.stop();
+        shooter.feedBalls(0);
         intake.intakeBall(0);
         intake.indexBall(0);
         turret.turn(0);

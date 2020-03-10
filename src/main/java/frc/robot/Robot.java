@@ -200,7 +200,7 @@ public class Robot extends TimedRobot {
     autoModes[0] = new MoveFromLine(driveTrain, turret, shooter, intake, table);
     autoModes[1] = new TrenchRun(driveTrain, turret, shooter, intake, table);
 
-    autoModeRunner.chooseAutoMode(autoModes[0]);
+    autoModeRunner.chooseAutoMode(autoModes[1]);
     autoModeRunner.start();
   }
 
