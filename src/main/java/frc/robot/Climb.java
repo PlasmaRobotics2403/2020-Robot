@@ -33,11 +33,11 @@ public class Climb {
     }
 
     void releaseLatch() {
-        climbLatch.set(false);
+        climbLatch.set(true);
     }
 
     void engageLatch() {
-        climbLatch.set(true);
+        climbLatch.set(false);
     }
 
 

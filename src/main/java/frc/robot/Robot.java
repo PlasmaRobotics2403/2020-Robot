@@ -332,6 +332,9 @@ public class Robot extends TimedRobot {
     if(joystick.dPad.getPOV() == 180) {
       climb.spoolCable(Constants.MAX_SPOOL_SPEED);
     }
+    else {
+      climb.spoolCable(0);
+    }
   }
 
   public void visionControls(final PlasmaJoystick joystick, final PlasmaJoystick joystick2) {
