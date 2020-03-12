@@ -63,7 +63,7 @@ public class Constants {
 	public static final double MAX_TURRET_SPEED = 1; 
 
 	/* CLIMB CONSTANTS */
-	public static final double MAX_SPOOL_SPEED = .7;
+	public static final double MAX_SPOOL_SPEED = .9;
 
 	/* CONTROL PANEL CONSTANTS */
 	public final static Color BLUE_TARGET = ColorMatch.makeColor(0.143, 0.427, 0.429);

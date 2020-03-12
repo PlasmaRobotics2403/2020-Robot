@@ -7,10 +7,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.auto.modes.MoveFromLine;
 import frc.robot.auto.modes.Nothing;
 import frc.robot.auto.modes.TrenchRun;
@@ -72,6 +72,7 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
+
   @Override
   public void robotInit() {
 
@@ -127,6 +128,8 @@ public class Robot extends TimedRobot {
 
     intake.retractForeBar();
   }
+
+  
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for
@@ -343,10 +346,10 @@ public class Robot extends TimedRobot {
       visionTurretLineUp();
     }
     else if(joystick2.X.isPressed()){
-      turret.turn(-0.25);
+      turret.turn(-0.3);
     } 
     else if(joystick2.B.isPressed()){
-      turret.turn(0.25);
+      turret.turn(0.3);
     } 
     else if(joystick2.Y.isPressed()){
       turret.setTurretPosition(0.0);
