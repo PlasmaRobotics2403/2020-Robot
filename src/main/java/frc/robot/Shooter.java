@@ -65,13 +65,25 @@ public class Shooter {
         rightFlyWheelMotor.set(ControlMode.PercentOutput, -speed);
     }
 
+    public void shootLeft(double speed) {
+        leftFlyWheelMotor.set(ControlMode.PercentOutput, -speed);
+    }
+
+    public void shootRight(double speed) {
+        rightFlyWheelMotor.set(ControlMode.PercentOutput, -speed);
+    }
+
     public void spinToRPM(double RPM) {
         leftFlyWheelMotor.set(ControlMode.Velocity, -RPM);
         rightFlyWheelMotor.set(ControlMode.Velocity, -RPM);
     }
 
-    public double getShooterRPM() {
+    public double getLeftShooterRPM() {
         return -leftFlyWheelMotor.getSelectedSensorVelocity();
+    }
+
+    public double getRightShooterRPM() {
+        return -rightFlyWheelMotor.getSelectedSensorVelocity();
     }
 
     public void displayShooterRPM() {

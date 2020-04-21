@@ -256,7 +256,7 @@ public class Robot extends TimedRobot {
       shooter.autoHood(distance);
       shooter.spinToRPM(15000);
       ballCounter = 0;
-      if(shooter.getShooterRPM() > 14500 && shooter.getHoodPosition() > shooter.getTargetAngle() - shooter.getErrorRange() && shooter.getHoodPosition() < shooter.getTargetAngle() + shooter.getErrorRange()) {
+      if(shooter.getLeftShooterRPM() > 14500 && shooter.getHoodPosition() > shooter.getTargetAngle() - shooter.getErrorRange() && shooter.getHoodPosition() < shooter.getTargetAngle() + shooter.getErrorRange()) {
         shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
         intake.indexBall(Constants.MAX_INDEX_SPEED);
         intake.intakeBall(Constants.MAX_INDEX_SPEED);
@@ -391,5 +391,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    if(joystick.B.isPressed()) {
+        shooter.shootRight(1);
+    }
+    else if(joystick.X.isPressed()) {
+        shooter.shootLeft(1);
+    }
+    else {
+      shooter.stop();
+    }
   }
 }
