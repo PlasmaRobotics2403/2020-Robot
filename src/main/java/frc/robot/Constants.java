@@ -61,6 +61,7 @@ public class Constants {
 
 	/* TURRET CONSTANTS */
 	public static final double MAX_TURRET_SPEED = 1; 
+	public static final double TURRET_FUDGE = -0.0;
 
 	/* CLIMB CONSTANTS */
 	public static final double MAX_SPOOL_SPEED = .9;

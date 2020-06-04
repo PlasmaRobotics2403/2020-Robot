@@ -38,9 +38,11 @@ public class Shooter {
         leftFlyWheelMotor.setInverted(false);
         leftFlyWheelMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         leftFlyWheelMotor.setSelectedSensorPosition(0,0,0);
+        leftFlyWheelMotor.setNeutralMode(NeutralMode.Brake);
         rightFlyWheelMotor.setInverted(true);
         rightFlyWheelMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
         rightFlyWheelMotor.setSelectedSensorPosition(0,0,0);
+        rightFlyWheelMotor.setNeutralMode(NeutralMode.Brake);
 
         hoodMotor.setInverted(false);
         hoodMotor.setSelectedSensorPosition(0,0,0);
@@ -59,18 +61,10 @@ public class Shooter {
         errorRange = 0;
     };
 
-    public void shoot(double speed) {
+    public void stopFlyWheel() {
         
-        leftFlyWheelMotor.set(ControlMode.PercentOutput, -speed);
-        rightFlyWheelMotor.set(ControlMode.PercentOutput, -speed);
-    }
-
-    public void shootLeft(double speed) {
-        leftFlyWheelMotor.set(ControlMode.PercentOutput, -speed);
-    }
-
-    public void shootRight(double speed) {
-        rightFlyWheelMotor.set(ControlMode.PercentOutput, -speed);
+        leftFlyWheelMotor.set(ControlMode.PercentOutput, 0);
+        rightFlyWheelMotor.set(ControlMode.PercentOutput, 0);
     }
 
     public void spinToRPM(double RPM) {

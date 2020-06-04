@@ -306,7 +306,7 @@ public class Robot extends TimedRobot {
       intake.intakeBall(0);
       intake.indexBall(0);
       shooter.feedBalls(0);
-      shooter.shoot(0);
+      shooter.stopFlyWheel();
       intake.resetAdvanceBall();
       shooter.hoodHidden();
     }
@@ -379,7 +379,7 @@ public class Robot extends TimedRobot {
       turret.turn(0);
     }
     else {
-      double turnVal = vision_X / 20;
+      double turnVal = vision_X / 20 + Constants.TURRET_FUDGE;
       turnVal = Math.min(turnVal, 0.2);
       turnVal = Math.max(-0.2, turnVal);
       turret.turn(turnVal);
@@ -391,7 +391,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    if(joystick.B.isPressed()) {
+    /*if(joystick.B.isPressed()) {
         shooter.shootRight(1);
     }
     else if(joystick.X.isPressed()) {
@@ -399,6 +399,6 @@ public class Robot extends TimedRobot {
     }
     else {
       shooter.stop();
-    }
+    }*/
   }
 }
