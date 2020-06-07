@@ -341,7 +341,10 @@ public class Robot extends TimedRobot {
   }
 
   public void visionControls(final PlasmaJoystick joystick, final PlasmaJoystick joystick2) {
-    if(joystick.RT.isPressed() || joystick.LT.isPressed()){
+    if(joystick.BACK.isPressed()){
+      turret.calibrate();
+    }
+    else if(joystick.RT.isPressed() || joystick.LT.isPressed()){
       table.getEntry("ledMode").setNumber(3);
       visionTurretLineUp();
     }

@@ -38,8 +38,8 @@ public class Constants {
 	/* DIO ID CONSTANTS */
 	public static final int FRONT_INDEX_SENSOR_ID = 0;
 	public static final int BACK_INDEX_SENSOR_ID = 1;
-	public static final int MAX_LIMIT_SWITCH_ID = 3;
-	public static final int MIN_LIMIT_SWITCH_ID = 2;
+	public static final int MAX_LIMIT_SWITCH_ID = 2;
+	public static final int MIN_LIMIT_SWITCH_ID = 3;
 
 	/* DRIVETRAIN CONSTANTS */
 	public static final double MAX_AUTO_DRIVE_SPEED = 0.9;
@@ -62,6 +62,9 @@ public class Constants {
 	/* TURRET CONSTANTS */
 	public static final double MAX_TURRET_SPEED = 1; 
 	public static final double TURRET_FUDGE = -0.0;
+	public static final int MIN_LIMIT_DISTANCE = -9800;
+	public static final int MAX_LIMIT_DISTANCE = 15700;
+	public static final int ENCODER_TICKS_PER_ROTATION = 27600;
 
 	/* CLIMB CONSTANTS */
 	public static final double MAX_SPOOL_SPEED = .9;
