@@ -84,9 +84,9 @@ public class Shoot implements Action{
 
         distance = Math.pow(Math.E, -Math.log(vision_Area/1539.1)/2.081);
 
-        shooter.autoHood(distance);
+        shooter.autoHood(distance, 1);
         shooter.spinToRPM(15000);
-        if(shooter.getLeftShooterRPM() > 14500 && shooter.getHoodPosition() > shooter.getTargetAngle() - shooter.getErrorRange() && shooter.getHoodPosition() < shooter.getTargetAngle() + shooter.getErrorRange()) {
+        if(shooter.getLeftShooterRPM() > 14500) {
             shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
             intake.indexBall(Constants.MAX_INDEX_SPEED);
             intake.intakeBall(Constants.MAX_INTAKE_SPEED);

@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 
 //import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 //import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -28,11 +29,12 @@ public class Turret {
 
         limitCurrent(turretRotationMotor);
         turretRotationMotor.setInverted(false);
+        turretRotationMotor.setSensorPhase(false);
 
-        turretRotationMotor.config_kF(0, 0.1, 30); //feed forward speed
+        turretRotationMotor.config_kF(0, 0.0, 30); //feed forward speed
         turretRotationMotor.config_kP(0, 0.4, 30); // used to get close to position
 		turretRotationMotor.config_kI(0, 0.003, 30); // start with 0.001
-		turretRotationMotor.config_kD(0, 50, 30); // (second) ~ 10 x kP
+		turretRotationMotor.config_kD(0, 0, 30); // (second) ~ 10 x kP
         turretRotationMotor.config_IntegralZone(0, 500, 30);
 
         turretRotationMotor.configClosedloopRamp(0.2);
@@ -89,7 +91,8 @@ public class Turret {
     }
 
     private int angleToEncoderPosition(double angle){
-        int position = (int) (angle*Constants.ENCODER_TICKS_PER_ROTATION/(2*Math.PI)) % Constants.ENCODER_TICKS_PER_ROTATION;
+        int position = ((int) ((angle/360.0)*Constants.ENCODER_TICKS_PER_ROTATION)) % Constants.ENCODER_TICKS_PER_ROTATION;
+        DriverStation.reportWarning("first test: " + String.valueOf(position), false);
         if(position > Constants.MAX_LIMIT_DISTANCE){
             int maxDistance = position - Constants.MAX_LIMIT_DISTANCE;
             position -= Constants.ENCODER_TICKS_PER_ROTATION;
@@ -106,12 +109,19 @@ public class Turret {
                 return (maxDistance < minDistance) ? Constants.MAX_LIMIT_DISTANCE : Constants.MIN_LIMIT_DISTANCE;
             }
         }
+        DriverStation.reportWarning("second test: " + String.valueOf(position), false);
         return position;
+    }
+
+    public double getTurretAngle(){
+        double position = turretRotationMotor.getSelectedSensorPosition();
+        return position * 360 / Constants.ENCODER_TICKS_PER_ROTATION;
     }
 
     public void setTurretPosition(double angle){
         int position = angleToEncoderPosition(angle);
         turretRotationMotor.set(ControlMode.Position, position);
+        SmartDashboard.putNumber("Turret Align Error", turretRotationMotor.getClosedLoopError());
     }
 
     public double getTurretPosition(){

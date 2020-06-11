@@ -53,17 +53,19 @@ public class Robot extends TimedRobot {
   NetworkTableEntry tx;
   NetworkTableEntry ty;
   NetworkTableEntry ta;
+  NetworkTableEntry tv;
 
   CameraServer server;
 
   double vision_X;
   double vision_Y;
   double vision_Area;
-
-  double distance;
+  int vision_Targets;
 
   int ballCounter;
   boolean ballCounted;
+
+  double turretTargetAngle;
 
   Looper looper;
   TrajectoryGenerator trajectoryGnerator;
@@ -112,11 +114,14 @@ public class Robot extends TimedRobot {
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
+    tv = table.getEntry("tv");
 
     table.getEntry("ledMode").setNumber(1);
 
     ballCounter = 0;
     ballCounted = false;
+
+    turretTargetAngle = 0.0;
 
     autoModeRunner = new AutoModeRunner();
     autoModes = new AutoMode[10];
@@ -145,6 +150,7 @@ public class Robot extends TimedRobot {
     vision_X = tx.getDouble(0.0);
     vision_Y = ty.getDouble(0.0);
     vision_Area = ta.getDouble(0.0);
+    vision_Targets = (int) tv.getDouble(0.0);
 
     SmartDashboard.putNumber("LimelightX", vision_X);
     SmartDashboard.putNumber("LimelightY", vision_Y);
@@ -157,9 +163,6 @@ public class Robot extends TimedRobot {
     //distance /= 12; // convert from inches to feet
     //distance /= Constants.x2_ZOOM_Y_CONVERION; // conversion from x1 zoom to x2 zoom
     
-    distance = Math.pow(Math.E, -Math.log(vision_Area/1539.1)/2.081);
-
-    SmartDashboard.putNumber("Distance", distance);
     shooter.displayHoodPosition();
     SmartDashboard.putNumber("shooter percent", shooter.getShooterPercentOutput());
 
@@ -232,6 +235,8 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     autoModeRunner.stop();
     shooter.hoodHidden();
+    turretTargetAngle = driveTrain.getGyroAngle();
+    SmartDashboard.putNumber("manual hood position", 2000);
   }
   
   @Override
@@ -253,15 +258,15 @@ public class Robot extends TimedRobot {
       ballCounter = 0;
     }
     else if(joystick.RT.isPressed()){
-      shooter.autoHood(distance);
+      shooter.autoHood(vision_Y, vision_Targets);
       shooter.spinToRPM(15000);
       ballCounter = 0;
-      if(shooter.getLeftShooterRPM() > 14500 && shooter.getHoodPosition() > shooter.getTargetAngle() - shooter.getErrorRange() && shooter.getHoodPosition() < shooter.getTargetAngle() + shooter.getErrorRange()) {
+      if(shooter.getLeftShooterRPM() > 14500){
         shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
         intake.indexBall(Constants.MAX_INDEX_SPEED);
         intake.intakeBall(Constants.MAX_INDEX_SPEED);
       }
-      else if(joystick.START.isPressed() && shooter.getHoodPosition() > shooter.getTargetAngle() - shooter.getErrorRange() && shooter.getHoodPosition() < shooter.getTargetAngle() + shooter.getErrorRange()){
+      else if(joystick.START.isPressed()){
         shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
         intake.indexBall(Constants.MAX_INDEX_SPEED);
         intake.intakeBall(Constants.MAX_INDEX_SPEED);
@@ -270,12 +275,7 @@ public class Robot extends TimedRobot {
     else if(joystick.LT.isPressed()){
       shooter.spinToRPM(15000);
     }
-    else if(intake.getBackIndexSensorState() == false){
-      intake.indexBall(0);
-      intake.intakeBall(0);
-      intake.roller(0);
-    }
-    else if(ballCounter == 6){
+    else if(ballCounter > 5){
       intake.indexBall(0);
       intake.intakeBall(0);
       intake.roller(0);
@@ -283,21 +283,15 @@ public class Robot extends TimedRobot {
     else if(joystick.RB.isPressed()){
       intake.roller(Constants.MAX_ROLLER_SPEED);
       if(intake.getFrontIndexSensorState() == false) {
-        intake.advanceBall();
+        if(intake.getBackIndexSensorState() == true){
+          intake.advanceBall();
+        }
         if(ballCounted == false && ballCounter < 5){
           ballCounter ++;
           ballCounted = true;
         }
       }
       else {
-        if(intake.getIntakePosition() > 55000) {
-          intake.indexBall(0);
-          intake.intakeBall(0);
-          intake.resetAdvanceBall();
-          if(ballCounter == 5){
-            ballCounter ++;
-          }
-        }
         ballCounted = false;
       }
     }
@@ -346,21 +340,38 @@ public class Robot extends TimedRobot {
     }
     else if(joystick.RT.isPressed() || joystick.LT.isPressed()){
       table.getEntry("ledMode").setNumber(3);
-      visionTurretLineUp();
+      visionTargetPosition();
+
+      if(joystick2.X.isPressed()){
+        turret.turn(-0.5);
+      } 
+      else if(joystick2.B.isPressed()){
+        turret.turn(0.5);
+      } 
+      else if(joystick2.A.isPressed()){
+        turret.turn(0);
+      }
+      else{
+        turret.setTurretPosition(turretTargetAngle - driveTrain.getGyroAngle());
+      }
     }
-    else if(joystick2.X.isPressed()){
+    else{
+      turret.setTurretPosition(0.0);
+      table.getEntry("ledMode").setNumber(1);
+    }
+    /*else if(joystick2.X.isPressed()){
       turret.turn(-0.3);
     } 
     else if(joystick2.B.isPressed()){
       turret.turn(0.3);
     } 
     else if(joystick2.Y.isPressed()){
-      turret.setTurretPosition(0.0);
+      turret.setTurretPosition(90.0);
     }
     else {
       turret.turn(0);
       table.getEntry("ledMode").setNumber(1);
-    }
+    }*/
   }
 
   public void visionLineUp() {
@@ -377,15 +388,9 @@ public class Robot extends TimedRobot {
     //driveTrain.FPSDrive(forwardVal, turnVal);
   }
 
-  public void visionTurretLineUp() {
-    if (vision_Area == 0) {
-      turret.turn(0);
-    }
-    else {
-      double turnVal = vision_X / 20 + Constants.TURRET_FUDGE;
-      turnVal = Math.min(turnVal, 0.2);
-      turnVal = Math.max(-0.2, turnVal);
-      turret.turn(turnVal);
+  public void visionTargetPosition() {
+    if (vision_Area != 0) {
+      turretTargetAngle = vision_X + turret.getTurretAngle() + driveTrain.getGyroAngle();
     }
   }
 

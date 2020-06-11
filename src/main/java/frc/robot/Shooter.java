@@ -108,22 +108,23 @@ public class Shooter {
     //    hoodMotor.set(ControlMode.PercentOutput, 0);
     //}
 
-    public void autoHood(double distance) {
-        targetAngle = (75) * (-0.0155 * distance + 90.002);//(-80 * distance) + 7800;
-        SmartDashboard.putNumber("target angle", targetAngle);
-        errorRange = targetAngle * Constants.ANGLE_ERROR_PERCENT;
-        SmartDashboard.putNumber("angle error range", errorRange);
-        hoodMotor.set(ControlMode.Position, targetAngle);
+    public void autoHood(double x, int valid) {
+        double hoodPosition = 2000;
+        if(valid >= 1){
+            double a = 0.00041;
+            double b = 0.0230;
+            double c = 0.1872;
+            double d = -3.860;
+            double e = -132.909;
+            double f = 6184.52;
+            hoodPosition = a*x*x*x*x*x + b*x*x*x*x + c*x*x*x + d*x*x + e*x + f;
+        }
+        SmartDashboard.putNumber("camera angle", x);
+        SmartDashboard.putNumber("hood target position", hoodPosition);
+        hoodMotor.set(ControlMode.Position, hoodPosition);
     }
     public void hoodHidden() {
         hoodMotor.set(ControlMode.Position, 0);
-    }
-
-    public double getTargetAngle() {
-        return targetAngle;
-    }
-    public double getErrorRange() {
-        return errorRange;
     }
 
     public void displayHoodPosition() {

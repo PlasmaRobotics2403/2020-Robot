@@ -55,8 +55,8 @@ public class Constants {
 	public static final double ANGLE_ERROR_PERCENT = 0.04;
 
 	/* INTAKE CONSTANTS */
-	public static final double MAX_INDEX_SPEED = 0.9;
-	public static final double MAX_INTAKE_SPEED = 0.9;
+	public static final double MAX_INDEX_SPEED = 0.75;
+	public static final double MAX_INTAKE_SPEED = 0.75;
 	public static final double MAX_ROLLER_SPEED = 0.75;
 
 	/* TURRET CONSTANTS */

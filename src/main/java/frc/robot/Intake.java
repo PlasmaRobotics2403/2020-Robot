@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {
-    TalonSRX intakeMotor;
+    TalonSRX indexMotor2;
     TalonSRX indexMotor;
     VictorSPX rollerMotor;
 
@@ -22,36 +22,40 @@ public class Intake {
     Solenoid foreBarPiston;
 
     double speed;
+    int advanceCount;
 
-    Intake(int intake_motor_ID, int indexer_motor_ID, int intake_solenoid_ID, int front_index_sensor_ID, int back_index_sensor_ID, int roller_motor_ID) {
-        intakeMotor = new TalonSRX(intake_motor_ID);
+    Intake(int index2_motor_ID, int indexer_motor_ID, int intake_solenoid_ID, int front_index_sensor_ID, int back_index_sensor_ID, int roller_motor_ID) {
+        indexMotor2 = new TalonSRX(index2_motor_ID);
         indexMotor = new TalonSRX(indexer_motor_ID);
         rollerMotor = new VictorSPX(roller_motor_ID);
+        advanceCount = 0;
 
         indexMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         indexMotor.setSelectedSensorPosition(0,0,0);
+        indexMotor.configClosedloopRamp(0, 300);
+        indexMotor.configOpenloopRamp(0, 300);
 
-        indexMotor.config_kF(0, 0.667, 30); //feed forward speed
-        indexMotor.config_kP(0, 11, 30); // used to get close to position
-		indexMotor.config_kI(0, 0.0005, 30); // start with 0.001
-		indexMotor.config_kD(0, 20, 30); // (second) ~ 10 x kP
-        indexMotor.config_IntegralZone(0, 30, 30);
+        indexMotor.config_kF(0, 0.0, 300); //feed forward speed
+        indexMotor.config_kP(0, 0.1, 300); // used to get close to position
+		indexMotor.config_kI(0, 0.0, 300); // start with 0.001
+		indexMotor.config_kD(0, 0, 300); // (second) ~ 10 x kP
+        indexMotor.config_IntegralZone(0, 30, 300);
 
         frontIndexSensor = new DigitalInput(front_index_sensor_ID);
         backIndexSensor = new DigitalInput(back_index_sensor_ID);
 
         foreBarPiston = new Solenoid(intake_solenoid_ID);
 
-        limitCurrent(intakeMotor);
+        limitCurrent(indexMotor2);
         limitCurrent(indexMotor);
 
         rollerMotor.setInverted(false);
         indexMotor.setInverted(true);
-        intakeMotor.setInverted(false);
+        indexMotor2.setInverted(false);
     };
 
     public void intakeBall(double speed) {
-        intakeMotor.set(ControlMode.PercentOutput, speed);
+        indexMotor2.set(ControlMode.PercentOutput, speed);
     }
 
     public void roller(double speed) {
@@ -63,13 +67,16 @@ public class Intake {
     }
 
     public void advanceBall(){
-        indexMotor.set(ControlMode.Position, 55000);
-        intakeMotor.set(ControlMode.Follower, indexMotor.getDeviceID());
+        advanceCount ++;
+        indexMotor.set(ControlMode.Position, 17000*advanceCount);
+        SmartDashboard.putNumber("index position", indexMotor.getSelectedSensorPosition());
+        indexMotor2.set(ControlMode.Follower, indexMotor.getDeviceID());
         
     }
 
     public void resetAdvanceBall(){
         indexMotor.setSelectedSensorPosition(0, 0, 0);
+        advanceCount = 0;
     }
 
     public double getIntakePosition() {
@@ -93,7 +100,6 @@ public class Intake {
         talon.configPeakCurrentDuration(45, 1000);
         talon.configContinuousCurrentLimit(45,1000);
         talon.enableCurrentLimit(true);
-        talon.configClosedloopRamp(1);
     }
 
     public boolean getFrontIndexSensorState() {
