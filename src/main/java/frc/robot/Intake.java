@@ -68,7 +68,7 @@ public class Intake {
 
     public void advanceBall(){
         advanceCount ++;
-        indexMotor.set(ControlMode.Position, 17000*advanceCount);
+        indexMotor.set(ControlMode.Position, 16000*advanceCount);
         SmartDashboard.putNumber("index position", indexMotor.getSelectedSensorPosition());
         indexMotor2.set(ControlMode.Follower, indexMotor.getDeviceID());
         

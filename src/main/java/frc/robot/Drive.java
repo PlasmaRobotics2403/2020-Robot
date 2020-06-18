@@ -7,14 +7,7 @@
 
 package frc.robot;
 
-import frc.robot.auto.util.cheesypath.lib.geometry.Pose2d;
-import frc.robot.auto.util.cheesypath.lib.geometry.Pose2dWithCurvature;
-import frc.robot.auto.util.cheesypath.lib.trajectory.TrajectoryIterator;
-import frc.robot.auto.util.cheesypath.lib.trajectory.timing.TimedState;
-import frc.robot.auto.util.cheesypath.lib.util.DriveSignal;
 import frc.robot.controllers.PlasmaAxis;
-import frc.robot.loops.ILooper;
-import frc.robot.loops.Loop;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -50,12 +43,6 @@ public class Drive {
     private double gyroAngle;
     private double gyroPitch;
 
-    DriveMotionPlanner mMotionPlanner;
-    boolean mOverrideTrajectory;
-    DriveControlState mDriveControlState;
-    Pose2d error;
-    TimedState<Pose2dWithCurvature> path_setPoint;
-
     public Drive(final int leftDriveID, final int leftDriveSlaveID, final int rightDriveID, final int rightDriveSlaveID){
       leftDrive = new TalonFX(leftDriveID);
       leftDriveSlave = new TalonFX(leftDriveSlaveID);
@@ -63,11 +50,6 @@ public class Drive {
       rightDriveSlave = new TalonFX(rightDriveSlaveID);
 
       navX = new AHRS(SPI.Port.kMXP);
-
-
-
-      mMotionPlanner = new DriveMotionPlanner();
-      mOverrideTrajectory = false;
 
       
 
@@ -318,93 +300,9 @@ public class Drive {
     }
 
 
-    public synchronized void setTrajectory(final TrajectoryIterator<TimedState<Pose2dWithCurvature>> trajectory) {
-      if (mMotionPlanner != null) {
-          mOverrideTrajectory = false;
-          mMotionPlanner.reset();
-          mMotionPlanner.setTrajectory(trajectory);
-          mDriveControlState = DriveControlState.PATH_FOLLOWING;
-      }
-  }
-
-  public boolean isDoneWithTrajectory() {
-      if (mMotionPlanner == null || mDriveControlState != DriveControlState.PATH_FOLLOWING) {
-          return false;
-      }
-      return mMotionPlanner.isDone() || mOverrideTrajectory;
-  }
-
-  private void updatePathFollower() {
-    if (mDriveControlState == DriveControlState.PATH_FOLLOWING) {
-        final double now = Timer.getFPGATimestamp();
-
-        final DriveMotionPlanner.Output output = mMotionPlanner.update(now, RobotState.getInstance().getFieldToVehicle(now));
-
-        // DriveSignal signal = new DriveSignal(demand.left_feedforward_voltage / 12.0, demand.right_feedforward_voltage / 12.0);
-
-        error = mMotionPlanner.error();
-        path_setPoint = mMotionPlanner.setpoint();
-
-        if (!mOverrideTrajectory) {
-            setVelocity(new DriveSignal(radiansPerSecondToTicksPer100ms(output.left_velocity), radiansPerSecondToTicksPer100ms(output.right_velocity)),
-                    new DriveSignal(output.left_feedforward_voltage / 12.0, output.right_feedforward_voltage / 12.0));
-        } else {
-            setVelocity(DriveSignal.BRAKE, DriveSignal.BRAKE);
-        }
-    } else {
-        DriverStation.reportError("Drive is not in path following state", false);
-    }
-  }
-
   private static double radiansPerSecondToTicksPer100ms(final double rad_s) {
     return rad_s / (Math.PI * 2.0) * 4096.0 / 10.0;
   }
-
-  public synchronized void setVelocity(final DriveSignal signal, final DriveSignal feedForward) {
-    leftDrive.set(ControlMode.Velocity, signal.getLeft(), DemandType.ArbitraryFeedForward, feedForward.getLeft());
-    rightDrive.set(ControlMode.Velocity, signal.getRight(), DemandType.ArbitraryFeedForward, feedForward.getRight());
-    leftDriveSlave.set(ControlMode.Follower, leftDrive.getDeviceID());
-    rightDriveSlave.set(ControlMode.Follower, rightDrive.getDeviceID());
-  }
-
-  private final Loop mLoop = new Loop() {
-    @Override
-    public void onStart(final double timestamp) {
-      synchronized (Drive.this) {
-        // startLogging();
-      }
-    }
-
-    @Override
-    public void onLoop(final double timestamp) {
-      synchronized (Drive.this) {
-        switch (mDriveControlState) {
-          case OPEN_LOOP:
-            break;
-          case PATH_FOLLOWING:
-            updatePathFollower();
-            break;
-          default:
-            System.out.println("Unexpected drive control state: " + mDriveControlState);
-            break;
-        }
-        /*
-         * // TODO: fix this (tom) if (mAutoShift) { handleAutoShift(); } else
-         */
-        {
-          // setHighGear(false);
-        }
-      }
-    }
-
-    @Override
-    public void onStop(final double timestamp) {
-  }
-};
-
-public void registerEnabledLoops(ILooper in) {
-  in.register(mLoop);
-}
 
   public enum DriveControlState {
     OPEN_LOOP, // open loop voltage control

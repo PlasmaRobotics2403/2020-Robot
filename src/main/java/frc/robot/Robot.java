@@ -16,10 +16,7 @@ import frc.robot.auto.modes.Nothing;
 import frc.robot.auto.modes.TrenchRun;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
-import frc.robot.auto.util.cheesypath.lib.TrajectoryGenerator;
-import frc.robot.auto.util.cheesypath.lib.util.CrashTracker;
 import frc.robot.controllers.PlasmaJoystick;
-import frc.robot.loops.Looper;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -66,9 +63,6 @@ public class Robot extends TimedRobot {
   boolean ballCounted;
 
   double turretTargetAngle;
-
-  Looper looper;
-  TrajectoryGenerator trajectoryGnerator;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -261,7 +255,7 @@ public class Robot extends TimedRobot {
       shooter.autoHood(vision_Y, vision_Targets);
       shooter.spinToRPM(15000);
       ballCounter = 0;
-      if(shooter.getLeftShooterRPM() > 14500){
+      if(shooter.getLeftShooterRPM() > 18000){
         shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
         intake.indexBall(Constants.MAX_INDEX_SPEED);
         intake.intakeBall(Constants.MAX_INDEX_SPEED);
