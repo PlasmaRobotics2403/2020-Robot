@@ -18,14 +18,15 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 //import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
-
-
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 // Wiplib 2020 says to use edu.wpi.first.wpilibj2
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -120,6 +121,10 @@ public class Drive {
       leftDriveSlave.configOpenloopRamp(0.25);
       rightDrive.configOpenloopRamp(0.25);
       rightDriveSlave.configOpenloopRamp(0.25);
+
+
+      SpeedController leftFront = new TalonFX(3);
+      SpeedControllerGroup autonLeftDrive = new SpeedControllerGroup(new PWMVictorSPX(Constants.L_DRIVE_ID), new PWMVictorSPX(Constants.L_DRIVE_SLAVE_ID));
     }
 
     public void FPSDrive(final PlasmaAxis forwardAxis, final PlasmaAxis turnAxis) {
