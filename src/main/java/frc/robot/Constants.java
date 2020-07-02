@@ -47,6 +47,7 @@ public class Constants {
 	public static final double MAX_DRIVE_TURN = 0.75;
 	public static final double DRIVE_ENCODER_CONVERSION = 0.0092 / 5; // ticks to inches
 	public static final double WHEEL_BASE = 0.65; //distance between left and right wheel in meters
+	public static final int UNITS_PER_METER = 32848;
 
 	/* SHOOTER CONSTANTS */
 	public static final double MAX_SHOOTER_SPEED = 0.8;

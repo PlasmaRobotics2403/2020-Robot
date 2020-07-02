@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 //import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 //import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
@@ -28,31 +29,47 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
 
 
 //import edu.wpi.first.wpilibj.command.Command;
 
 public class Drive {
 
-    public TalonFX leftDrive;
-    public TalonFX leftDriveSlave;
-    public TalonFX rightDrive;
-    public TalonFX rightDriveSlave;
+    public WPI_TalonFX leftDrive;
+    public WPI_TalonFX leftDriveSlave;
+    public WPI_TalonFX rightDrive;
+    public WPI_TalonFX rightDriveSlave;
 
     private final AHRS navX;
     private double gyroAngle;
     private double gyroPitch;
 
+    public DifferentialDrive diffDrive;
+    public DifferentialDriveOdometry odometry;
+    public DifferentialDriveKinematics kinematics;
+    public SimpleMotorFeedforward feedForward;
+
     public Drive(final int leftDriveID, final int leftDriveSlaveID, final int rightDriveID, final int rightDriveSlaveID){
-      leftDrive = new TalonFX(leftDriveID);
-      leftDriveSlave = new TalonFX(leftDriveSlaveID);
-      rightDrive = new TalonFX(rightDriveID);
-      rightDriveSlave = new TalonFX(rightDriveSlaveID);
+      leftDrive = new WPI_TalonFX(leftDriveID);
+      leftDriveSlave = new WPI_TalonFX(leftDriveSlaveID);
+      rightDrive = new WPI_TalonFX(rightDriveID);
+      rightDriveSlave = new WPI_TalonFX(rightDriveSlaveID);
+
+      diffDrive = new DifferentialDrive(leftDrive, rightDrive);
+      odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getGyroAngle()));
+      kinematics = new DifferentialDriveKinematics(Constants.WHEEL_BASE);
+      feedForward = new SimpleMotorFeedforward(ks, kv, ka)
 
       navX = new AHRS(SPI.Port.kMXP);
-
-      
 
 
       leftDrive.configFactoryDefault();
@@ -122,9 +139,6 @@ public class Drive {
       rightDrive.configOpenloopRamp(0.25);
       rightDriveSlave.configOpenloopRamp(0.25);
 
-
-      SpeedController leftFront = new TalonFX(3);
-      SpeedControllerGroup autonLeftDrive = new SpeedControllerGroup(new PWMVictorSPX(Constants.L_DRIVE_ID), new PWMVictorSPX(Constants.L_DRIVE_SLAVE_ID));
     }
 
     public void FPSDrive(final PlasmaAxis forwardAxis, final PlasmaAxis turnAxis) {
@@ -309,8 +323,32 @@ public class Drive {
     return rad_s / (Math.PI * 2.0) * 4096.0 / 10.0;
   }
 
-  public enum DriveControlState {
-    OPEN_LOOP, // open loop voltage control
-    PATH_FOLLOWING, // velocity PID control
+  public void updateOdometry(){
+    odometry.update(Rotation2d.fromDegrees(getGyroAngle()), getLeftDistance(), getRightDistance());
+  }
+
+  public Pose2d getPose(){
+    return odometry.getPoseMeters();
+  }
+
+  public void resetOdometry(Pose2d pose){
+    resetEncoders();
+    odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
+  }
+
+  public void driveVolts(double leftVolts, double rightVolts){
+    leftDrive.setVoltage(leftVolts);
+    leftDriveSlave.set(ControlMode.Follower, leftDrive.getDeviceID());
+    rightDrive.setVoltage(-rightVolts);
+    rightDriveSlave.set(ControlMode.Follower, rightDrive.getDeviceID());
+    diffDrive.feed(); 
+  }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds(){
+    return new DifferentialDriveWheelSpeeds(leftDrive.getSelectedSensorVelocity()/(10*Constants.UNITS_PER_METER), rightDrive.getSelectedSensorVelocity()/(10*Constants.UNITS_PER_METER));
+  }
+
+  public DifferentialDriveKinematics getKinematics(){
+    return kinematics;
   }
 }
