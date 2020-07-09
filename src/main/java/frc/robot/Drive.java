@@ -38,11 +38,12 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 //import edu.wpi.first.wpilibj.command.Command;
 
-public class Drive {
+public class Drive extends SubsystemBase {
 
     public WPI_TalonFX leftDrive;
     public WPI_TalonFX leftDriveSlave;
@@ -67,7 +68,7 @@ public class Drive {
       diffDrive = new DifferentialDrive(leftDrive, rightDrive);
       odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getGyroAngle()));
       kinematics = new DifferentialDriveKinematics(Constants.WHEEL_BASE);
-      feedForward = new SimpleMotorFeedforward(ks, kv, ka)
+      feedForward = new SimpleMotorFeedforward(.24, 1.83, .36);
 
       navX = new AHRS(SPI.Port.kMXP);
 
@@ -336,12 +337,10 @@ public class Drive {
     odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
   }
 
-  public void driveVolts(double leftVolts, double rightVolts){
-    leftDrive.setVoltage(leftVolts);
-    leftDriveSlave.set(ControlMode.Follower, leftDrive.getDeviceID());
-    rightDrive.setVoltage(-rightVolts);
-    rightDriveSlave.set(ControlMode.Follower, rightDrive.getDeviceID());
-    diffDrive.feed(); 
+  public void setOutput(double leftVolts, double rightVolts){
+    leftDrive.set(leftVolts / 12);
+    rightDrive.set(rightVolts / 12);
+    diffDrive.feed();
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
@@ -350,5 +349,9 @@ public class Drive {
 
   public DifferentialDriveKinematics getKinematics(){
     return kinematics;
+  }
+
+  public SimpleMotorFeedforward getFeedForward(){
+    return feedForward;
   }
 }
