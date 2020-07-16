@@ -66,8 +66,8 @@ public class Drive extends SubsystemBase {
       rightDriveSlave = new WPI_TalonFX(rightDriveSlaveID);
 
       diffDrive = new DifferentialDrive(leftDrive, rightDrive);
-      odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getGyroAngle()));
       kinematics = new DifferentialDriveKinematics(Constants.WHEEL_BASE);
+      odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
       feedForward = new SimpleMotorFeedforward(.24, 1.83, .36);
 
       navX = new AHRS(SPI.Port.kMXP);
@@ -195,7 +195,7 @@ public class Drive extends SubsystemBase {
   
     public void updateGyro() {
       gyroAngle = navX.getYaw();
-      gyroPitch = navX.getPitch();
+      //gyroPitch = navX.getPitch();
     }
   
     public double getGyroAngle() {

@@ -28,32 +28,34 @@ public class followTrajectory implements Action {
 	int i = 0;
 	
 	public followTrajectory(final String name, final Drive drive) {
-		this.drive = drive;        
+		this.drive = drive;   
+		DriverStation.reportWarning("getting trajectory", false);  
 		trajectory = generateTrajectory.getFiveFeetForward();
-
+		DriverStation.reportWarning("got Trajectory", false);
 		
 	}
 
 	@Override
 	public boolean isFinished() {
-		return false;
+		return ramsete.isFinished();
 	}
 	
 	@Override
 	public void start() {
-		
+		DriverStation.reportWarning("before ramsete", false);
 		ramsete = new RamseteCommand(generateTrajectory.getFiveFeetForward(),
 									 drive::getPose,
 									 new RamseteController(2.0, 0.7), 
 									 new SimpleMotorFeedforward(.24, 1.83, .36), 
 									 drive.getKinematics(), 
-									 drive.getWheelSpeeds(), 
-									 new PIDController(0, 0, 0), 
-									 new PIDController(0, 0, 0),
+									 drive::getWheelSpeeds, 
+									 new PIDController(1.2, 0.005, 25), 
+									 new PIDController(1.2, 0.005, 25),
 									 drive::setOutput,
 									 drive);
 		
-		
+		ramsete.execute();
+		DriverStation.reportWarning("finished creating ramsete", false);
 	}
 
 	@Override
@@ -61,6 +63,8 @@ public class followTrajectory implements Action {
 		SmartDashboard.putNumber("Left Error", drive.leftDrive.getClosedLoopError(0));
 		SmartDashboard.putNumber("Right Error", drive.rightDrive.getClosedLoopError(0));
 		//SmartDashboard.putNumber("leftPosition Error", leftFollower.getSegment().position - (drive.leftDrive.getSelectedSensorPosition(0) * Constants.DRIVE_ENCODER_CONVERSION));
+		ramsete.execute(); 
+		DriverStation.reportWarning("updated", false);
 	}
 
 	@Override

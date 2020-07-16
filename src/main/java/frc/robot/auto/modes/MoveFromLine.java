@@ -3,9 +3,11 @@ package frc.robot.auto.modes;
 import frc.robot.auto.actions.SetTurretPosition;
 import frc.robot.auto.actions.Shoot;
 import frc.robot.auto.actions.Straight;
+import frc.robot.auto.actions.followTrajectory;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeEndedException;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.DriverStation;
 
 //import edu.wpi.first.wpilibj.DriverStation;
 
@@ -40,9 +42,11 @@ public class MoveFromLine extends AutoMode {
 	 */
 	@Override
 	protected void routine() throws AutoModeEndedException {
-		runAction(new Straight(0.2, 24, driveTrain, false, intake));
+		DriverStation.reportWarning("started Action", false);
+		runAction(new followTrajectory("fiveFeetForward", driveTrain));
+		//runAction(new Straight(0.2, 24, driveTrain, false, intake));
 		//runAction(new SetTurretPosition(6900, turret));
-		runAction(new Shoot(turret, shooter, intake, table, 6900, false));
+		//runAction(new Shoot(turret, shooter, intake, table, 6900, false));
 	}
 
 }

@@ -16,6 +16,7 @@ import frc.robot.auto.modes.Nothing;
 import frc.robot.auto.modes.TrenchRun;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
+import frc.robot.auto.util.GenerateTrajectory;
 import frc.robot.controllers.PlasmaJoystick;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
@@ -39,6 +40,8 @@ public class Robot extends TimedRobot {
   Turret turret;
   Climb climb;
   ControlPanel controlPanel;
+
+  GenerateTrajectory generateTraj;
 
   Compressor compressor; 
 
@@ -100,6 +103,8 @@ public class Robot extends TimedRobot {
     controlPanel = new ControlPanel(Constants.SPIN_CONTROL_PANEL_MOTOR_ID);
 
     compressor = new Compressor();
+
+    generateTraj = new GenerateTrajectory();
 
     driveTrain.resetEncoders();
     driveTrain.zeroGyro();
@@ -172,6 +177,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("back sensor state", intake.getBackIndexSensorState());
     intake.displayIndexPosition();
     SmartDashboard.putNumber("ball count", ballCounter);
+
+    //driveTrain.updateOdometry();
   }
 
   public void disabledInit() {
@@ -231,6 +238,7 @@ public class Robot extends TimedRobot {
     shooter.hoodHidden();
     turretTargetAngle = driveTrain.getGyroAngle();
     SmartDashboard.putNumber("manual hood position", 2000);
+    driveTrain.diffDrive.close();
   }
   
   @Override
