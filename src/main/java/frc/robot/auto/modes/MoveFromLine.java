@@ -44,6 +44,7 @@ public class MoveFromLine extends AutoMode {
 	protected void routine() throws AutoModeEndedException {
 		DriverStation.reportWarning("started Action", false);
 		runAction(new followTrajectory("fiveFeetForward", driveTrain));
+		DriverStation.reportWarning("Finished Action", false);
 		//runAction(new Straight(0.2, 24, driveTrain, false, intake));
 		//runAction(new SetTurretPosition(6900, turret));
 		//runAction(new Shoot(turret, shooter, intake, table, 6900, false));

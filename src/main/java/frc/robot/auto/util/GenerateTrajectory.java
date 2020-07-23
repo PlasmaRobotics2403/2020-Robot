@@ -21,8 +21,6 @@ public class GenerateTrajectory {
 
     public GenerateTrajectory() {
 
-        //config.setKinematics(drive.getKinematics());
-
         fiveFeetForward = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),

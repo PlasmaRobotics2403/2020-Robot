@@ -1,6 +1,7 @@
 package frc.robot.auto.actions;
 
 import java.io.File;
+import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
@@ -9,8 +10,15 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
 import frc.robot.Drive;
@@ -24,13 +32,27 @@ public class followTrajectory implements Action {
 
 	RamseteCommand ramsete;
 	Trajectory trajectory;
+	TrajectoryConfig config;
 	
 	int i = 0;
 	
 	public followTrajectory(final String name, final Drive drive) {
 		this.drive = drive;   
-		DriverStation.reportWarning("getting trajectory", false);  
-		trajectory = generateTrajectory.getFiveFeetForward();
+		DriverStation.reportWarning("getting trajectory", false);
+		config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2));  
+		trajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(
+                new Translation2d(1, 0),
+                new Translation2d(2, 0)
+            ),
+            // End 5 meters straight ahead of where we started, facing forward
+            new Pose2d(3, 0, new Rotation2d(0)),
+            // Pass config
+            config
+        );
 		DriverStation.reportWarning("got Trajectory", false);
 		
 	}
@@ -43,18 +65,18 @@ public class followTrajectory implements Action {
 	@Override
 	public void start() {
 		DriverStation.reportWarning("before ramsete", false);
-		ramsete = new RamseteCommand(generateTrajectory.getFiveFeetForward(),
+		ramsete = new RamseteCommand(trajectory,
 									 drive::getPose,
 									 new RamseteController(2.0, 0.7), 
 									 new SimpleMotorFeedforward(.24, 1.83, .36), 
-									 drive.getKinematics(), 
+									 new DifferentialDriveKinematics(Constants.WHEEL_BASE), 
 									 drive::getWheelSpeeds, 
-									 new PIDController(1.2, 0.005, 25), 
-									 new PIDController(1.2, 0.005, 25),
+									 new PIDController(0.1, 0.0, 0), 
+									 new PIDController(0.1, 0.0, 0),
 									 drive::setOutput,
 									 drive);
 		
-		ramsete.execute();
+		ramsete.initialize();
 		DriverStation.reportWarning("finished creating ramsete", false);
 	}
 
@@ -69,8 +91,8 @@ public class followTrajectory implements Action {
 
 	@Override
 	public void end() {
-		drive.leftDrive.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
-		drive.rightDrive.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
+		//drive.leftDrive.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
+		//drive.rightDrive.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
 		drive.zeroGyro();
 		drive.leftDrive.set(ControlMode.PercentOutput, 0);
 		drive.rightDrive.set(ControlMode.PercentOutput, 0);
