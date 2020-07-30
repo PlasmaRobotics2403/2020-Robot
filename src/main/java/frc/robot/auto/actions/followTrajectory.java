@@ -39,7 +39,8 @@ public class followTrajectory implements Action {
 	public followTrajectory(final String name, final Drive drive) {
 		this.drive = drive;   
 		DriverStation.reportWarning("getting trajectory", false);
-		config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2));  
+		config = new TrajectoryConfig(Units.feetToMeters(5), Units.feetToMeters(5))
+                                .setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE));
 		trajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
@@ -68,11 +69,11 @@ public class followTrajectory implements Action {
 		ramsete = new RamseteCommand(trajectory,
 									 drive::getPose,
 									 new RamseteController(2.0, 0.7), 
-									 new SimpleMotorFeedforward(.24, 1.83, .36), 
+									 new SimpleMotorFeedforward(.257, 1.82, .274), //.24, 1.83, .36
 									 new DifferentialDriveKinematics(Constants.WHEEL_BASE), 
 									 drive::getWheelSpeeds, 
-									 new PIDController(0.1, 0.0, 0), 
-									 new PIDController(0.1, 0.0, 0),
+									 new PIDController(0.000382, 0.0, 0.000179), 
+									 new PIDController(0.000382, 0.0, 0.000179),
 									 drive::setOutput,
 									 drive);
 		

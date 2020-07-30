@@ -45,7 +45,7 @@ public class Constants {
 	public static final double MAX_AUTO_DRIVE_SPEED = 0.9;
 	public static final double MAX_DRIVE_SPEED = 1;
 	public static final double MAX_DRIVE_TURN = 0.75;
-	public static final double DRIVE_ENCODER_CONVERSION = 0.001581037; // ticks to inches
+	public static final double DRIVE_ENCODER_CONVERSION = 0.00003083; // ticks to meters //0.001581037;
 	public static final double WHEEL_BASE = 0.65; //distance between left and right wheel in meters
 	public static final int UNITS_PER_METER = 32848;
 
