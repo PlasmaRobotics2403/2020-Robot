@@ -345,7 +345,10 @@ public class Drive extends SubsystemBase {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-    return new DifferentialDriveWheelSpeeds(leftDrive.getSelectedSensorVelocity()/(10*Constants.UNITS_PER_METER), rightDrive.getSelectedSensorVelocity()/(10*Constants.UNITS_PER_METER));
+    //return new DifferentialDriveWheelSpeeds(leftDrive.getSelectedSensorVelocity()/(10*Constants.UNITS_PER_METER), rightDrive.getSelectedSensorVelocity()/(10*Constants.UNITS_PER_METER));
+    return new DifferentialDriveWheelSpeeds(
+        leftDrive.getSelectedSensorVelocity()/ 7.0178 * 2 * Math.PI * Units.inchesToMeters(3) / 60,
+        rightDrive.getSelectedSensorVelocity()/ 7.0178 * 2 * Math.PI * Units.inchesToMeters(3) / 60);
   }
 
   public DifferentialDriveKinematics getKinematics(){
