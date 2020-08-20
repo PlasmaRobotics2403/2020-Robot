@@ -131,15 +131,11 @@ public class Drive extends SubsystemBase {
       leftDriveSlave.setNeutralMode(NeutralMode.Brake);
       rightDriveSlave.setNeutralMode(NeutralMode.Brake);
 
-      leftDrive.configClosedloopRamp(0.25);
-      rightDrive.configClosedloopRamp(0.25);
-      leftDriveSlave.configClosedloopRamp(0.25);
-      rightDriveSlave.configClosedloopRamp(0.25);
 
-      leftDrive.configOpenloopRamp(0.25);
-      leftDriveSlave.configOpenloopRamp(0.25);
-      rightDrive.configOpenloopRamp(0.25);
-      rightDriveSlave.configOpenloopRamp(0.25);
+      leftDrive.configClosedloopRamp(0);
+      rightDrive.configClosedloopRamp(0);
+      leftDriveSlave.configClosedloopRamp(0);
+      rightDriveSlave.configClosedloopRamp(0);
 
     }
 

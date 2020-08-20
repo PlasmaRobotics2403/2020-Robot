@@ -261,7 +261,7 @@ public class Robot extends TimedRobot {
     }
     else if(joystick.RT.isPressed()){
       shooter.autoHood(vision_Y, vision_Targets);
-      shooter.spinToRPM(15000);
+      shooter.spinToRPM(18000);
       ballCounter = 0;
       if(shooter.getLeftShooterRPM() > 18000){
         shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
@@ -275,7 +275,7 @@ public class Robot extends TimedRobot {
       }
     }
     else if(joystick.LT.isPressed()){
-      shooter.spinToRPM(15000);
+      shooter.spinToRPM(18000);
     }
     else if(ballCounter > 5){
       intake.indexBall(0);
