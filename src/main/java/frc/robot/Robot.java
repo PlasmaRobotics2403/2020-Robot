@@ -168,6 +168,8 @@ public class Robot extends TimedRobot {
     turret.displayTurretPosition();
     shooter.displayShooterRPM();
     SmartDashboard.putNumber("drive Distance", driveTrain.getDistance());
+    SmartDashboard.putNumber("left Distance", driveTrain.getLeftDistance());
+    SmartDashboard.putNumber("right Distance", driveTrain.getRightDistance());
     SmartDashboard.putBoolean("Turret min limit", turret.displayMinLimit());
     SmartDashboard.putBoolean("turret max limit", turret.displayMaxLimit());
 
@@ -178,7 +180,7 @@ public class Robot extends TimedRobot {
     intake.displayIndexPosition();
     SmartDashboard.putNumber("ball count", ballCounter);
 
-    //driveTrain.updateOdometry();
+    driveTrain.updateOdometry();
   }
 
   public void disabledInit() {

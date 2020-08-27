@@ -65,10 +65,7 @@ public class Drive extends SubsystemBase {
       rightDrive = new WPI_TalonFX(rightDriveID);
       rightDriveSlave = new WPI_TalonFX(rightDriveSlaveID);
 
-      diffDrive = new DifferentialDrive(leftDrive, rightDrive);
-      kinematics = new DifferentialDriveKinematics(Constants.WHEEL_BASE);
-      odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
-      feedForward = new SimpleMotorFeedforward(.24, 1.83, .36);
+      
 
       navX = new AHRS(SPI.Port.kMXP);
 
@@ -136,6 +133,11 @@ public class Drive extends SubsystemBase {
       rightDrive.configClosedloopRamp(0);
       leftDriveSlave.configClosedloopRamp(0);
       rightDriveSlave.configClosedloopRamp(0);
+      
+      diffDrive = new DifferentialDrive(leftDrive, rightDrive);
+      kinematics = new DifferentialDriveKinematics(Constants.WHEEL_BASE);
+      odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
+      feedForward = new SimpleMotorFeedforward(.24, 1.83, .36);
 
     }
 
@@ -163,8 +165,8 @@ public class Drive extends SubsystemBase {
     }
 
     public double getDistance() {
-      //return (toDistance(rightDrive) + toDistance(leftDrive)) / 2;
-      return toDistance(leftDrive);
+      return (toDistance(rightDrive) + toDistance(leftDrive)) / 2;
+     // return toDistance(leftDrive);
     }
 
     public double getLeftVelocity() {
@@ -184,14 +186,14 @@ public class Drive extends SubsystemBase {
     }
   
     private static double toDistance(final TalonFX talon) {
-      final double distance = talon.getSelectedSensorPosition(0) * Constants.DRIVE_ENCODER_CONVERSION;
+      final double distance = (talon.getSelectedSensorPosition()/ (2048.0/((13.0/50.0)*(24.0/50.0)))) * 2.0 * Math.PI * Units.inchesToMeters(3);
       // DriverStation.reportWarning(talon.getDeviceID() + " - distance: " + distance,
       // false);
       return distance;
     }
   
     public void updateGyro() {
-      gyroAngle = navX.getYaw();
+      gyroAngle = -1*navX.getYaw();
       //gyroPitch = navX.getPitch();
     }
   
@@ -335,16 +337,20 @@ public class Drive extends SubsystemBase {
   }
 
   public void setOutput(double leftVolts, double rightVolts){
-    leftDrive.set(leftVolts / 12);
-    rightDrive.set(rightVolts / 12);
+    leftDrive.setVoltage(leftVolts);
+    leftDriveSlave.setVoltage(leftVolts);
+    rightDrive.setVoltage(rightVolts);
+    rightDriveSlave.setVoltage(rightVolts);
     diffDrive.feed();
+    SmartDashboard.putNumber("left volts", leftVolts);
+    SmartDashboard.putNumber("right volts", rightVolts);
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
     //return new DifferentialDriveWheelSpeeds(leftDrive.getSelectedSensorVelocity()/(10*Constants.UNITS_PER_METER), rightDrive.getSelectedSensorVelocity()/(10*Constants.UNITS_PER_METER));
     return new DifferentialDriveWheelSpeeds(
-        leftDrive.getSelectedSensorVelocity()/ 7.0178 * 2 * Math.PI * Units.inchesToMeters(3) / 60,
-        rightDrive.getSelectedSensorVelocity()/ 7.0178 * 2 * Math.PI * Units.inchesToMeters(3) / 60);
+        (leftDrive.getSelectedSensorVelocity()/ (2048.0/((13.0/50.0)*(24.0/50.0))))*10.0 * 2.0 * Math.PI * Units.inchesToMeters(3),
+        (rightDrive.getSelectedSensorVelocity()/ (2048.0/((13.0/50.0)*(24.0/50.0))))*10.0 * 2.0 * Math.PI * Units.inchesToMeters(3)); //double check these
   }
 
   public DifferentialDriveKinematics getKinematics(){

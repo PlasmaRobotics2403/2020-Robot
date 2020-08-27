@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
@@ -39,18 +40,19 @@ public class followTrajectory implements Action {
 	public followTrajectory(final String name, final Drive drive) {
 		this.drive = drive;   
 		DriverStation.reportWarning("getting trajectory", false);
-		config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2))
-                                .setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE));
+		config = new TrajectoryConfig(2.0, 2.0)
+								.setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE))
+								.addConstraint(new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(.277, 1.78, .275), new DifferentialDriveKinematics(Constants.WHEEL_BASE), 11));
 		trajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-                new Translation2d(2, 0),
-                new Translation2d(3, 0)
+                new Translation2d(1, 0),
+                new Translation2d(2, 0)
             ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(5, 0, new Rotation2d(0)),
+            new Pose2d(3, 0, new Rotation2d(0)),
             // Pass config
             config
         );
@@ -68,12 +70,12 @@ public class followTrajectory implements Action {
 		DriverStation.reportWarning("before ramsete", false);
 		ramsete = new RamseteCommand(trajectory,
 									 drive::getPose,
-									 new RamseteController(2.0, 0.7), 
-									 new SimpleMotorFeedforward(.257, 1.82, .274), //.24, 1.83, .36
+									 new RamseteController(), 
+									 new SimpleMotorFeedforward(.277, 1.78, .275), //.257, 1.82, .274
 									 new DifferentialDriveKinematics(Constants.WHEEL_BASE), 
 									 drive::getWheelSpeeds, 
-									 new PIDController(0.000382, 0.0, 0.000179), 
-									 new PIDController(0.000382, 0.0, 0.000179),
+									 new PIDController(3, 0.0, 0.0), 
+									 new PIDController(3, 0.0, 0.0),
 									 drive::setOutput,
 									 drive);
 		
