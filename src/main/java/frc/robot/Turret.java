@@ -24,7 +24,8 @@ public class Turret {
 
         turretRotationMotor = new TalonSRX(TURRET_ROTATION_MOTOR_ID);
         turretRotationMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,0);
-        
+        turretRotationMotor.setSelectedSensorPosition(6100);
+
         isCalibrated = false;
 
         limitCurrent(turretRotationMotor);
@@ -88,6 +89,10 @@ public class Turret {
         else {
             turretRotationMotor.set(ControlMode.PercentOutput, 0.2);
         }
+    }
+
+    public double getVelocity(){
+        return turretRotationMotor.getSelectedSensorVelocity();
     }
 
     private int angleToEncoderPosition(double angle){

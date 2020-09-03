@@ -8,27 +8,28 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class SetTurretPosition implements Action{
     
-    double position;
+    double angle;
     Turret turret;
+    double startingPosition;
 
-    public SetTurretPosition(double position, Turret turret){
-        this.position = position;
+    public SetTurretPosition(double angle, Turret turret){
+        this.angle = angle;
         this.turret = turret;
     }
 
     @Override
     public boolean isFinished() {
-        return turret.getTurretPosition() > position - 1300 && turret.getTurretPosition() < position + 1300; 
+        return (turret.getTurretAngle() > angle - 0.5 && turret.getTurretAngle() < angle + 0.5 && Math.abs(turret.getVelocity()) < 1); 
     }
 
     @Override
     public void start() {
-        
+        startingPosition = turret.getTurretPosition();
     }
 
     @Override
     public void update(){
-        turret.setTurretPosition(position);
+        turret.setTurretPosition(angle);
     }
 
     public void end() {

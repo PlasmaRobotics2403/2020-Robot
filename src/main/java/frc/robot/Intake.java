@@ -23,12 +23,14 @@ public class Intake {
 
     double speed;
     int advanceCount;
+    int ballCount;
 
     Intake(int index2_motor_ID, int indexer_motor_ID, int intake_solenoid_ID, int front_index_sensor_ID, int back_index_sensor_ID, int roller_motor_ID) {
         indexMotor2 = new TalonSRX(index2_motor_ID);
         indexMotor = new TalonSRX(indexer_motor_ID);
         rollerMotor = new VictorSPX(roller_motor_ID);
         advanceCount = 0;
+        ballCount = 3;
 
         indexMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         indexMotor.setSelectedSensorPosition(0,0,0);
@@ -108,5 +110,17 @@ public class Intake {
 
     public boolean getBackIndexSensorState() {
         return backIndexSensor.get();
+    }
+
+    public int getAutonBallCount() {
+        return ballCount;
+    }
+
+    public void addAutonBallCount() {
+        ballCount ++;
+    }
+
+    public void subtractBallCount() {
+        ballCount --;
     }
 }

@@ -41,11 +41,11 @@ public class TrenchRun extends AutoMode {
 	 */
 	@Override
 	protected void routine() throws AutoModeEndedException {
-		runActionsParallel(new Straight(0.2, 68, driveTrain, false, intake), new Shoot(turret, shooter, intake, table, 6500, false));
+		//runActionsParallel(new Straight(0.2, 68, driveTrain, false, intake), new Shoot(turret, shooter, intake, table, 6500, false));
 		////runAction(new SetTurretPosition(6000, turret));
 		//runAction(new Shoot(turret, shooter, intake, table, 6500, false));
-		runAction(new IntakeRoller(intake));
-        runActionsParallel(new Straight(0.2, 175, driveTrain, true, intake), new Shoot(turret, shooter, intake, table, 6700, true));
+		//runAction(new IntakeRoller(intake));
+        //runActionsParallel(new Straight(0.2, 175, driveTrain, true, intake), new Shoot(turret, shooter, intake, table, 6700, true));
         //runAction(new Shoot(turret, shooter, intake, table, 6700, true));
 	}
 

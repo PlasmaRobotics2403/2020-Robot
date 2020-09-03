@@ -193,7 +193,7 @@ public class Drive extends SubsystemBase {
     }
   
     public void updateGyro() {
-      gyroAngle = -1*navX.getYaw();
+      gyroAngle = navX.getYaw();
       //gyroPitch = navX.getPitch();
     }
   
@@ -324,7 +324,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void updateOdometry(){
-    odometry.update(Rotation2d.fromDegrees(getGyroAngle()), getLeftDistance(), getRightDistance());
+    odometry.update(Rotation2d.fromDegrees(-1*getGyroAngle()), getLeftDistance(), getRightDistance());
   }
 
   public Pose2d getPose(){
@@ -333,7 +333,7 @@ public class Drive extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose){
     resetEncoders();
-    odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroAngle()));
+    odometry.resetPosition(pose, Rotation2d.fromDegrees(-1*getGyroAngle()));
   }
 
   public void setOutput(double leftVolts, double rightVolts){

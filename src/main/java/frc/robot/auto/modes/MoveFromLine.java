@@ -1,5 +1,6 @@
 package frc.robot.auto.modes;
 
+import frc.robot.auto.actions.IntakeRoller;
 import frc.robot.auto.actions.SetTurretPosition;
 import frc.robot.auto.actions.Shoot;
 import frc.robot.auto.actions.Straight;
@@ -8,6 +9,7 @@ import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeEndedException;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Constants;
 
 //import edu.wpi.first.wpilibj.DriverStation;
 
@@ -43,11 +45,14 @@ public class MoveFromLine extends AutoMode {
 	@Override
 	protected void routine() throws AutoModeEndedException {
 		DriverStation.reportWarning("started Action", false);
-		runAction(new followTrajectory("fiveFeetForward", driveTrain));
-		DriverStation.reportWarning("Finished Action", false);
+		runAction(new IntakeRoller(intake, true));
+		runAction(new followTrajectory("fiveFeetForward", driveTrain, intake));
+		runAction(new SetTurretPosition(Constants.BACK_FACING - 30, turret));
+		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30));
 		//runAction(new Straight(0.2, 24, driveTrain, false, intake));
-		//runAction(new SetTurretPosition(6900, turret));
-		//runAction(new Shoot(turret, shooter, intake, table, 6900, false));
+		//
+		
+		DriverStation.reportWarning("Finished Action", false);
 	}
 
 }

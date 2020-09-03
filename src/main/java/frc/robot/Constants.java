@@ -67,6 +67,10 @@ public class Constants {
 	public static final int MIN_LIMIT_DISTANCE = -9800;
 	public static final int MAX_LIMIT_DISTANCE = 15700;
 	public static final int ENCODER_TICKS_PER_ROTATION = 27600;
+	public static final int FORWARD_FACING = 0;
+	public static final int BACK_FACING = 180;
+	public static final int LEFT_FACING = -90;
+	public static final int RIGHT_FACING = 90;
 
 	/* CLIMB CONSTANTS */
 	public static final double MAX_SPOOL_SPEED = .9;

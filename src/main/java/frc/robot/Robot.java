@@ -191,7 +191,7 @@ public class Robot extends TimedRobot {
     ballCounter = 0;
     //intake.retractForeBar();
     intake.resetAdvanceBall();
-    turret.resetTurretPosition();
+    //turret.resetTurretPosition();
     table.getEntry("ledMode").setNumber(1);
   }
 

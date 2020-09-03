@@ -7,6 +7,7 @@ import frc.robot.Shooter;
 import frc.robot.Turret;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Shoot implements Action{
     Turret turret;
@@ -27,27 +28,28 @@ public class Shoot implements Action{
     boolean ballCounted;
     boolean neverEnd;
 
-    double position;
+    double angle;
 
-    public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double position, boolean neverEnd){
+    boolean timeCollected;
+    double startTime;
+
+    public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double angle){
         this.turret = turret;
         this.shooter = shooter;
         this.intake = intake;
         this.table = table;
         distance = 0;
         vision_Area = 0;
-        this.position = position;
-        this.neverEnd = neverEnd;
+        this.angle = angle;
+        this.ballCount = intake.getAutonBallCount();
+        this.timeCollected = false;
+
+        startTime = 200.0;
     }
 
     @Override
     public boolean isFinished() {
-        if(neverEnd) {
-            return false;
-        }
-        else{
-            return ballCount == 0;
-        }
+        return startTime + 2.5 < Timer.getFPGATimestamp();
         
     }
 
@@ -58,12 +60,8 @@ public class Shoot implements Action{
         ta = table.getEntry("ta");
         table.getEntry("ledMode").setNumber(3);
 
-        ballCount = 5;
         ballCounted = false;
 
-        while(turret.getTurretPosition() < position - 1300 || turret.getTurretPosition() > position + 1300){
-            turret.setTurretPosition(position);
-        }
     }
 
     @Override
@@ -82,22 +80,17 @@ public class Shoot implements Action{
             turret.turn(turnVal);
         }
 
-        distance = Math.pow(Math.E, -Math.log(vision_Area/1539.1)/2.081);
-
-        shooter.autoHood(distance, 1);
+        shooter.autoHood(vision_Y, 1);
         shooter.spinToRPM(15000);
         if(shooter.getLeftShooterRPM() > 14500) {
+            if(timeCollected == false){
+                startTime = Timer.getFPGATimestamp();
+                timeCollected = true;
+            }
             shooter.feedBalls(Constants.MAX_BALL_FEED_SPEED);
             intake.indexBall(Constants.MAX_INDEX_SPEED);
             intake.intakeBall(Constants.MAX_INTAKE_SPEED);
             
-            if(intake.getBackIndexSensorState() && ballCounted == false){
-                ballCount --;
-                ballCounted = true;
-            }
-            else{
-                ballCounted = false;
-            }
         }
         else {
             shooter.feedBalls(0);

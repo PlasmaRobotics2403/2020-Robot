@@ -23,12 +23,14 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
 import frc.robot.Drive;
+import frc.robot.Intake;
 import frc.robot.auto.util.Action;
 import frc.robot.auto.util.GenerateTrajectory;
 
 public class followTrajectory implements Action {
 
-    Drive drive;
+	Drive drive;
+	Intake intake;
     GenerateTrajectory generateTrajectory;
 
 	RamseteCommand ramsete;
@@ -37,10 +39,11 @@ public class followTrajectory implements Action {
 	
 	int i = 0;
 	
-	public followTrajectory(final String name, final Drive drive) {
-		this.drive = drive;   
+	public followTrajectory(final String name, final Drive drive, final Intake intake) {
+		this.drive = drive;  
+		this.intake = intake; 
 		DriverStation.reportWarning("getting trajectory", false);
-		config = new TrajectoryConfig(2.0, 2.0)
+		config = new TrajectoryConfig(0.5, 0.5)
 								.setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE))
 								.addConstraint(new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(.277, 1.78, .275), new DifferentialDriveKinematics(Constants.WHEEL_BASE), 11));
 		trajectory = TrajectoryGenerator.generateTrajectory(
@@ -48,11 +51,11 @@ public class followTrajectory implements Action {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-                new Translation2d(1, 0),
-                new Translation2d(2, 0)
+                new Translation2d(0.5, 0.4),
+                new Translation2d(1, 0.8)
             ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0, new Rotation2d(0)),
+            new Pose2d(2, 1.2, new Rotation2d(0)),
             // Pass config
             config
         );
@@ -90,6 +93,13 @@ public class followTrajectory implements Action {
 		//SmartDashboard.putNumber("leftPosition Error", leftFollower.getSegment().position - (drive.leftDrive.getSelectedSensorPosition(0) * Constants.DRIVE_ENCODER_CONVERSION));
 		ramsete.execute(); 
 		DriverStation.reportWarning("updated", false);
+
+      	if(intake.getFrontIndexSensorState() == false) {
+        	if(intake.getBackIndexSensorState() == true){
+				  intake.advanceBall();
+				  intake.addAutonBallCount();
+			}	
+		}
 	}
 
 	@Override
