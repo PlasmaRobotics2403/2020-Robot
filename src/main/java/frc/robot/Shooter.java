@@ -21,6 +21,7 @@ public class Shooter {
 
     double targetAngle;
     double errorRange;
+    double hoodPosition;
     
     Shooter(final int LEFT_FLY_WHEEL_MOTOR_ID, final int RIGHT_FLY_WHEEL_MOTOR_ID, final int HOOD_MOTOR_ID,
             final int FRONT_ROLLER_MOTOR_ID) {
@@ -109,7 +110,7 @@ public class Shooter {
     //}
 
     public void autoHood(double x, int valid) {
-        double hoodPosition = 2000;
+        hoodPosition = 2000;
         if(valid >= 1){
             double a = 0.00041;
             double b = 0.0230;
@@ -125,6 +126,10 @@ public class Shooter {
     }
     public void hoodHidden() {
         hoodMotor.set(ControlMode.Position, 0);
+    }
+
+    public double getTargetHoodPosition(){
+        return hoodPosition;
     }
 
     public void displayHoodPosition() {

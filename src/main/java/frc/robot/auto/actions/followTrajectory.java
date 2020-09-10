@@ -34,33 +34,57 @@ public class followTrajectory implements Action {
     GenerateTrajectory generateTrajectory;
 
 	RamseteCommand ramsete;
-	Trajectory trajectory;
-	TrajectoryConfig config;
+	Trajectory trajectory0;
+	Trajectory trajectory1;
+	TrajectoryConfig config0;
+	TrajectoryConfig config1;
+
+	Trajectory[] trajectoryArray;
+	int trajectoryNumber;
 	
 	int i = 0;
 	
-	public followTrajectory(final String name, final Drive drive, final Intake intake) {
+	public followTrajectory(int trajectoryNumber, final Drive drive, final Intake intake) {
+		this.trajectoryNumber = trajectoryNumber;
 		this.drive = drive;  
 		this.intake = intake; 
 		DriverStation.reportWarning("getting trajectory", false);
-		config = new TrajectoryConfig(0.5, 0.5)
+		config0 = new TrajectoryConfig(2.5, 1.75)
 								.setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE))
 								.addConstraint(new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(.277, 1.78, .275), new DifferentialDriveKinematics(Constants.WHEEL_BASE), 11));
-		trajectory = TrajectoryGenerator.generateTrajectory(
+		trajectory0 = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-                new Translation2d(0.5, 0.4),
-                new Translation2d(1, 0.8)
+                new Translation2d(2, 1.2)
             ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(2, 1.2, new Rotation2d(0)),
+            new Pose2d(3.5, 1.2, new Rotation2d(0)),
             // Pass config
-            config
-        );
-		DriverStation.reportWarning("got Trajectory", false);
+            config0
+		);
 		
+		config1 = new TrajectoryConfig(1.5, 1.0)
+								.setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE))
+								.addConstraint(new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(.277, 1.78, .275), new DifferentialDriveKinematics(Constants.WHEEL_BASE), 11));
+		trajectory1 = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(
+                new Translation2d(2, 1.2)
+            ),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(4.1, 1.2, new Rotation2d(0)),
+            // Pass config
+            config1
+        );
+		
+		trajectoryArray = new Trajectory[10];
+		trajectoryArray[0] = trajectory0;
+		trajectoryArray[1] = trajectory1;
+		DriverStation.reportWarning("got Trajectory", false);
 	}
 
 	@Override
@@ -71,7 +95,7 @@ public class followTrajectory implements Action {
 	@Override
 	public void start() {
 		DriverStation.reportWarning("before ramsete", false);
-		ramsete = new RamseteCommand(trajectory,
+		ramsete = new RamseteCommand(trajectoryArray[trajectoryNumber],
 									 drive::getPose,
 									 new RamseteController(), 
 									 new SimpleMotorFeedforward(.277, 1.78, .275), //.257, 1.82, .274

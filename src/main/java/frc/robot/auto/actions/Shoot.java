@@ -33,6 +33,8 @@ public class Shoot implements Action{
     boolean timeCollected;
     double startTime;
 
+    boolean startShooting;
+
     public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double angle){
         this.turret = turret;
         this.shooter = shooter;
@@ -45,11 +47,12 @@ public class Shoot implements Action{
         this.timeCollected = false;
 
         startTime = 200.0;
+        this.startShooting = false;
     }
 
     @Override
     public boolean isFinished() {
-        return startTime + 2.5 < Timer.getFPGATimestamp();
+        return startTime + 3 < Timer.getFPGATimestamp();
         
     }
 
@@ -58,7 +61,7 @@ public class Shoot implements Action{
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
         ta = table.getEntry("ta");
-        table.getEntry("ledMode").setNumber(3);
+        //table.getEntry("ledMode").setNumber(3);
 
         ballCounted = false;
 
@@ -70,7 +73,7 @@ public class Shoot implements Action{
         vision_Y = ty.getDouble(0.0);
         vision_Area = ta.getDouble(0.0);
 
-        if (vision_Area == 0) {
+        /*if (vision_Area == 0) {
             turret.turn(0);
         }
         else {
@@ -78,11 +81,15 @@ public class Shoot implements Action{
             turnVal = Math.min(turnVal, 0.2);
             turnVal = Math.max(-0.2, turnVal);
             turret.turn(turnVal);
-        }
+        }*/
 
         shooter.autoHood(vision_Y, 1);
-        shooter.spinToRPM(15000);
-        if(shooter.getLeftShooterRPM() > 14500) {
+        shooter.spinToRPM(18000);
+        if(shooter.getLeftShooterRPM() > 18000){
+            startShooting = true;
+        }
+        
+        if(startShooting == true && shooter.getHoodPosition() >= shooter.getTargetHoodPosition() * 0.95) {
             if(timeCollected == false){
                 startTime = Timer.getFPGATimestamp();
                 timeCollected = true;

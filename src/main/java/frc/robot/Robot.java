@@ -222,6 +222,9 @@ public class Robot extends TimedRobot {
     autoModes[1] = new MoveFromLine(driveTrain, turret, shooter, intake, table);
     autoModes[2] = new TrenchRun(driveTrain, turret, shooter, intake, table);
 
+    table.getEntry("ledMode").setNumber(3);
+    turret.setTurretPosition(Constants.BACK_FACING);
+
     autoModeRunner.chooseAutoMode(autoModes[autoModeSelection]);
     autoModeRunner.start();
   }
@@ -232,6 +235,20 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
       driveTrain.getDistance();
+
+      vision_X = tx.getDouble(0.0);
+      vision_Y = ty.getDouble(0.0);
+      vision_Area = ta.getDouble(0.0);
+
+      if (vision_Area == 0) {
+        //turret.turn(0);
+      }
+      else {
+        double turnVal = vision_X / 20;
+        turnVal = Math.min(turnVal, 0.2);
+        turnVal = Math.max(-0.2, turnVal);
+        turret.turn(turnVal);
+      }
   }
 
   @Override

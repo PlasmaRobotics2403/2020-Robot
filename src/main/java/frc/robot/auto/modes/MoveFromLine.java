@@ -3,6 +3,7 @@ package frc.robot.auto.modes;
 import frc.robot.auto.actions.IntakeRoller;
 import frc.robot.auto.actions.SetTurretPosition;
 import frc.robot.auto.actions.Shoot;
+import frc.robot.auto.actions.SpinUp;
 import frc.robot.auto.actions.Straight;
 import frc.robot.auto.actions.followTrajectory;
 import frc.robot.auto.util.AutoMode;
@@ -45,9 +46,11 @@ public class MoveFromLine extends AutoMode {
 	@Override
 	protected void routine() throws AutoModeEndedException {
 		DriverStation.reportWarning("started Action", false);
+		//runAction(new SetTurretPosition(Constants.BACK_FACING, turret));
 		runAction(new IntakeRoller(intake, true));
-		runAction(new followTrajectory("fiveFeetForward", driveTrain, intake));
-		runAction(new SetTurretPosition(Constants.BACK_FACING - 30, turret));
+		runAction(new SpinUp(shooter, 18000));
+		runAction(new followTrajectory(0, driveTrain, intake));
+		runAction(new IntakeRoller(intake, false));
 		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30));
 		//runAction(new Straight(0.2, 24, driveTrain, false, intake));
 		//
