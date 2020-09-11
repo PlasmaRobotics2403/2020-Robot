@@ -32,10 +32,11 @@ public class Shoot implements Action{
 
     boolean timeCollected;
     double startTime;
+    double finishTime;
 
     boolean startShooting;
 
-    public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double angle){
+    public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double angle, double finishTime){
         this.turret = turret;
         this.shooter = shooter;
         this.intake = intake;
@@ -45,6 +46,7 @@ public class Shoot implements Action{
         this.angle = angle;
         this.ballCount = intake.getAutonBallCount();
         this.timeCollected = false;
+        this.finishTime = finishTime;
 
         startTime = 200.0;
         this.startShooting = false;
@@ -52,7 +54,7 @@ public class Shoot implements Action{
 
     @Override
     public boolean isFinished() {
-        return startTime + 3 < Timer.getFPGATimestamp();
+        return startTime + finishTime < Timer.getFPGATimestamp();
         
     }
 
@@ -61,7 +63,7 @@ public class Shoot implements Action{
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
         ta = table.getEntry("ta");
-        //table.getEntry("ledMode").setNumber(3);
+        table.getEntry("ledMode").setNumber(3);
 
         ballCounted = false;
 
@@ -113,6 +115,6 @@ public class Shoot implements Action{
         intake.intakeBall(0);
         intake.indexBall(0);
         turret.turn(0);
-        table.getEntry("ledMode").setNumber(1);
+        //table.getEntry("ledMode").setNumber(1);
     }
 }

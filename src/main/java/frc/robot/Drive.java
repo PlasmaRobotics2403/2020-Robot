@@ -210,6 +210,10 @@ public class Drive extends SubsystemBase {
     public void zeroGyro() {
       navX.zeroYaw();
     }
+
+    public void changeGyroAngle(double angle){
+      navX.setAngleAdjustment(angle);
+    }
   
 
     public void FPSDrive(final double forwardVal, double turnVal) {
@@ -279,6 +283,20 @@ public class Drive extends SubsystemBase {
       //rightDriveSlaveFront.set(ControlMode.PercentOutput, speed * Constants.MAX_AUTO_DRIVE_SPEED);
     }
 
+    public void setToBrake(){
+      leftDrive.setNeutralMode(NeutralMode.Brake);
+      rightDrive.setNeutralMode(NeutralMode.Brake);
+      leftDriveSlave.setNeutralMode(NeutralMode.Brake);
+      rightDriveSlave.setNeutralMode(NeutralMode.Brake);
+    }
+
+    public void setToCoast(){
+      leftDrive.setNeutralMode(NeutralMode.Coast);
+      rightDrive.setNeutralMode(NeutralMode.Coast);
+      leftDriveSlave.setNeutralMode(NeutralMode.Coast);
+      rightDriveSlave.setNeutralMode(NeutralMode.Coast);
+    }
+
     public void autonTankDrive(final double left, final double right) {
       leftWheelDrive(left);
       rightWheelDrive(right);
@@ -324,7 +342,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void updateOdometry(){
-    odometry.update(Rotation2d.fromDegrees(-1*getGyroAngle()), getLeftDistance(), getRightDistance());
+    odometry.update(Rotation2d.fromDegrees(-1*navX.getAngle()), getLeftDistance(), getRightDistance());
   }
 
   public Pose2d getPose(){

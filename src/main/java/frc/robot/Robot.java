@@ -67,6 +67,8 @@ public class Robot extends TimedRobot {
 
   double turretTargetAngle;
 
+  boolean setDriveToCoast;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -129,8 +131,10 @@ public class Robot extends TimedRobot {
     }
 
     autoModeSelection = 0;
+    setDriveToCoast = false;
 
     intake.retractForeBar();
+    driveTrain.setToCoast();
   }
 
   
@@ -158,10 +162,14 @@ public class Robot extends TimedRobot {
     autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
     SmartDashboard.putNumber("Auton Mode", autoModeSelection);
 
+    setDriveToCoast = SmartDashboard.getBoolean("Set Drive to Coast", false);
+    SmartDashboard.putBoolean("Set Drive to Coast", setDriveToCoast);
+
     //distance = (Constants.OUTERPORT_HEIGHT - Constants.CAMERA_HEIGHT) / Math.tan(Math.toRadians(vision_Y) + Math.toRadians(Constants.CAMERA_ANGLE) + Constants.LIMELIGHT_PAN);
     //distance /= 12; // convert from inches to feet
     //distance /= Constants.x2_ZOOM_Y_CONVERION; // conversion from x1 zoom to x2 zoom
     
+
     shooter.displayHoodPosition();
     SmartDashboard.putNumber("shooter percent", shooter.getShooterPercentOutput());
 
@@ -193,6 +201,12 @@ public class Robot extends TimedRobot {
     intake.resetAdvanceBall();
     //turret.resetTurretPosition();
     table.getEntry("ledMode").setNumber(1);
+    if(setDriveToCoast == true){
+      driveTrain.setToCoast();
+    }
+    else {
+      driveTrain.setToBrake();
+    }
   }
 
   public void disabledPeriodic() {
@@ -217,6 +231,7 @@ public class Robot extends TimedRobot {
     DriverStation.reportWarning("starting auto", false);
     driveTrain.resetEncoders();
     driveTrain.zeroGyro();
+    driveTrain.setToBrake();
 
     autoModes[0] = new Nothing();
     autoModes[1] = new MoveFromLine(driveTrain, turret, shooter, intake, table);
@@ -249,6 +264,13 @@ public class Robot extends TimedRobot {
         turnVal = Math.max(-0.2, turnVal);
         turret.turn(turnVal);
       }
+
+      if(intake.getFrontIndexSensorState() == false) {
+        if(intake.getBackIndexSensorState() == true){
+          intake.advanceBall();
+          intake.addAutonBallCount();
+        }	
+      }
   }
 
   @Override
@@ -258,6 +280,8 @@ public class Robot extends TimedRobot {
     turretTargetAngle = driveTrain.getGyroAngle();
     SmartDashboard.putNumber("manual hood position", 2000);
     driveTrain.diffDrive.close();
+    table.getEntry("ledMode").setNumber(1);
+    driveTrain.setToBrake();
   }
   
   @Override
