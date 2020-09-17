@@ -67,7 +67,7 @@ public class followTrajectory implements Action {
             config0
 		);
 		
-		config1 = new TrajectoryConfig(1.5, 1.0)
+		config1 = new TrajectoryConfig(2.5, 1.5)
 								.setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE))
 								.addConstraint(new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(.277, 1.78, .275), new DifferentialDriveKinematics(Constants.WHEEL_BASE), 11));
 		trajectory1 = TrajectoryGenerator.generateTrajectory(
@@ -83,19 +83,19 @@ public class followTrajectory implements Action {
             config1
 		);
 		
-		config2 = new TrajectoryConfig(1.5, 1.0)
+		config2 = new TrajectoryConfig(3, 1.5)
 								.setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE))
 								.addConstraint(new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(.277, 1.78, .275), new DifferentialDriveKinematics(Constants.WHEEL_BASE), 11))
 								.setReversed(true);
 		trajectory2 = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
-            new Pose2d(6.3, 1.2, new Rotation2d(180)),
+            new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-				new Translation2d(5.3, 1.2)
+				new Translation2d(-1.5, 0)
             ),
             // End 3 meters straight ahead of where we started, facing forward
-			new Pose2d(4.3, 1.2, new Rotation2d(0)),
+			new Pose2d(-3.5, 0, new Rotation2d(0)),
             // Pass config
             config2
         );
@@ -148,7 +148,7 @@ public class followTrajectory implements Action {
 		drive.rightDrive.set(ControlMode.PercentOutput, 0);
 		drive.leftDriveSlave.set(ControlMode.PercentOutput, 0);
 		drive.rightDriveSlave.set(ControlMode.PercentOutput, 0);
-		
+		drive.resetOdometry();
 	}
 
 }

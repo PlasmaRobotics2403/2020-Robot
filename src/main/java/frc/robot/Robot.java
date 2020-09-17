@@ -54,6 +54,7 @@ public class Robot extends TimedRobot {
   NetworkTableEntry ty;
   NetworkTableEntry ta;
   NetworkTableEntry tv;
+  NetworkTableEntry ts;
 
   CameraServer server;
 
@@ -61,6 +62,8 @@ public class Robot extends TimedRobot {
   double vision_Y;
   double vision_Area;
   int vision_Targets;
+  double vision_Scew;
+
 
   int ballCounter;
   boolean ballCounted;
@@ -116,6 +119,7 @@ public class Robot extends TimedRobot {
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
     tv = table.getEntry("tv");
+    ts = table.getEntry("ts");
 
     table.getEntry("ledMode").setNumber(1);
 
@@ -154,10 +158,12 @@ public class Robot extends TimedRobot {
     vision_Y = ty.getDouble(0.0);
     vision_Area = ta.getDouble(0.0);
     vision_Targets = (int) tv.getDouble(0.0);
+    vision_Scew = (((ts.getDouble(0.0) + 135) % 90) - 45) * 2;
 
     SmartDashboard.putNumber("LimelightX", vision_X);
     SmartDashboard.putNumber("LimelightY", vision_Y);
     SmartDashboard.putNumber("LimelightArea", vision_Area);
+    SmartDashboard.putNumber("LimelightScew", vision_Scew);
 
     autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
     SmartDashboard.putNumber("Auton Mode", autoModeSelection);
@@ -397,6 +403,7 @@ public class Robot extends TimedRobot {
         turret.turn(0);
       }
       else{
+
         turret.setTurretPosition(turretTargetAngle - driveTrain.getGyroAngle());
       }
     }
