@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.auto.modes.MoveFromLine;
 import frc.robot.auto.modes.Nothing;
+import frc.robot.auto.modes.ScaleAuton;
+import frc.robot.auto.modes.SixBallAuto;
 import frc.robot.auto.modes.TrenchRun;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeRunner;
@@ -242,6 +244,8 @@ public class Robot extends TimedRobot {
     autoModes[0] = new Nothing();
     autoModes[1] = new MoveFromLine(driveTrain, turret, shooter, intake, table);
     autoModes[2] = new TrenchRun(driveTrain, turret, shooter, intake, table);
+    autoModes[3] = new SixBallAuto(driveTrain, turret, shooter, intake, table);
+    autoModes[4] = new ScaleAuton(driveTrain, turret, shooter, intake, table);
 
     table.getEntry("ledMode").setNumber(3);
     turret.setTurretPosition(Constants.BACK_FACING);
@@ -426,7 +430,7 @@ public class Robot extends TimedRobot {
     }*/
   }
 
-  public void visionLineUp() {
+  /*public void visionLineUp() {
 
     double turnVal = vision_X / 45;
     turnVal = Math.min(turnVal, 0.3);
@@ -438,7 +442,7 @@ public class Robot extends TimedRobot {
     forwardVal *= -1;
 
     //driveTrain.FPSDrive(forwardVal, turnVal);
-  }
+  }*/
 
   public void visionTargetPosition() {
     if (vision_Area != 0) {

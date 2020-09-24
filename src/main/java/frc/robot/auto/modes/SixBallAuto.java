@@ -25,14 +25,14 @@ import frc.robot.Turret;
 /**
  *
  */
-public class TrenchRun extends AutoMode {
+public class SixBallAuto extends AutoMode {
 	Drive driveTrain;
 	Turret turret;
 	Shooter shooter;
 	Intake intake;
 	NetworkTable table;
 
-    public TrenchRun(Drive driveTrain, Turret turret, Shooter shooter, Intake intake, NetworkTable table) {
+    public SixBallAuto(Drive driveTrain, Turret turret, Shooter shooter, Intake intake, NetworkTable table) {
 		this.driveTrain = driveTrain;
 		this.turret = turret;
 		this.shooter = shooter;
@@ -50,11 +50,11 @@ public class TrenchRun extends AutoMode {
 		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 1, 15000));
 		runAction(new IntakeRoller(intake, true));
 		runAction(new SpinUp(shooter, 18000));
-		runAction(new followTrajectory(1, driveTrain, intake));
-		
-		runAction(new followTrajectory(2, driveTrain, intake));
+		runAction(new followTrajectory(4, driveTrain, intake));
 		runAction(new IntakeRoller(intake, false));
-		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 3, 18000));
+		runAction(new followTrajectory(5, driveTrain, intake));
+		
+		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 2, 18000));
 		//
 		
 		DriverStation.reportWarning("Finished Action", false);

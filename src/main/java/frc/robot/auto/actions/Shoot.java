@@ -34,9 +34,11 @@ public class Shoot implements Action{
     double startTime;
     double finishTime;
 
+    double rpm;
+
     boolean startShooting;
 
-    public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double angle, double finishTime){
+    public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double angle, double finishTime, double rpm){
         this.turret = turret;
         this.shooter = shooter;
         this.intake = intake;
@@ -47,6 +49,8 @@ public class Shoot implements Action{
         this.ballCount = intake.getAutonBallCount();
         this.timeCollected = false;
         this.finishTime = finishTime;
+
+        this.rpm = rpm;
 
         startTime = 200.0;
         this.startShooting = false;
@@ -86,8 +90,8 @@ public class Shoot implements Action{
         }*/
 
         shooter.autoHood(vision_Y, 1);
-        shooter.spinToRPM(18000);
-        if(shooter.getLeftShooterRPM() > 18000){
+        shooter.spinToRPM(rpm);
+        if(shooter.getLeftShooterRPM() > rpm){
             startShooting = true;
         }
         
