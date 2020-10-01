@@ -7,6 +7,7 @@ import frc.robot.auto.actions.SpinUp;
 import frc.robot.auto.actions.Straight;
 import frc.robot.auto.actions.followTrajectory;
 import frc.robot.auto.actions.gyroAngle;
+import frc.robot.auto.actions.pivotToAngle;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeEndedException;
 import edu.wpi.first.networktables.NetworkTable;
@@ -54,7 +55,10 @@ public class ScaleAuton extends AutoMode {
 		
 		//runAction(new followTrajectory(6, driveTrain, intake));
 		runAction(new IntakeRoller(intake, false));
-		//runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 2, 18000));
+		runAction(new pivotToAngle(driveTrain, 180));
+		runAction(new IntakeRoller(intake, true));
+		runAction(new followTrajectory(7, driveTrain, intake));
+		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 2, 18000));
 		//
 		
 		DriverStation.reportWarning("Finished Action", false);

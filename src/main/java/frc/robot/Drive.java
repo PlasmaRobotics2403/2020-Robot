@@ -378,4 +378,12 @@ public class Drive extends SubsystemBase {
   public SimpleMotorFeedforward getFeedForward(){
     return feedForward;
   }
+
+  public double pivotXPosition (double heading) {
+    return (Constants.WHEEL_BASE / 2) / Math.sin(heading);
+  }
+
+  public double pivotYPosition (double heading) {
+    return (Constants.WHEEL_BASE / 2) / Math.cos(heading);
+  }
 }
