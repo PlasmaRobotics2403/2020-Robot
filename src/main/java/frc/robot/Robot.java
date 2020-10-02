@@ -58,6 +58,8 @@ public class Robot extends TimedRobot {
   NetworkTableEntry tv;
   NetworkTableEntry ts;
 
+  double[] zeroArray = new double[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+
   CameraServer server;
 
   double vision_X;
@@ -162,10 +164,17 @@ public class Robot extends TimedRobot {
     vision_Targets = (int) tv.getDouble(0.0);
     vision_Scew = (((ts.getDouble(0.0) + 135) % 90) - 45) * 2;
 
+    double[] xCorners = table.getEntry("tcornx").getDoubleArray(zeroArray);
+    double[] yCorners = table.getEntry("tcorny").getDoubleArray(zeroArray);
+
     SmartDashboard.putNumber("LimelightX", vision_X);
     SmartDashboard.putNumber("LimelightY", vision_Y);
     SmartDashboard.putNumber("LimelightArea", vision_Area);
     SmartDashboard.putNumber("LimelightScew", vision_Scew);
+    SmartDashboard.putNumberArray("x Corner Values ", xCorners);
+    SmartDashboard.putNumberArray("y Corner Values ", yCorners);
+    //DriverStation.reportWarning("exists? " + table.getEntry("tcornx").exists(), false);
+
 
     autoModeSelection = (int) SmartDashboard.getNumber("Auton Mode", 0.0);
     SmartDashboard.putNumber("Auton Mode", autoModeSelection);
