@@ -53,13 +53,11 @@ public class ScaleAuton extends AutoMode {
 		runAction(new SpinUp(shooter, 18000));
 		runAction(new followTrajectory(4, driveTrain, intake));
 		
-		//runAction(new followTrajectory(6, driveTrain, intake));
 		runAction(new IntakeRoller(intake, false));
 		runAction(new pivotToAngle(driveTrain, 180));
 		runAction(new IntakeRoller(intake, true));
 		runAction(new followTrajectory(7, driveTrain, intake));
 		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 2, 18000));
-		//
 		
 		DriverStation.reportWarning("Finished Action", false);
 	}

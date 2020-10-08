@@ -184,10 +184,10 @@ public class followTrajectory implements Action {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-                new Translation2d(1, 1.3)
+                new Translation2d(1, 1.2) //1.3, 1.8
             ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(2, 1.8, new Rotation2d(Math.toRadians(-10))),
+            new Pose2d(2, 1.7, new Rotation2d(Math.toRadians(20))),
             // Pass config
             config6
 		);

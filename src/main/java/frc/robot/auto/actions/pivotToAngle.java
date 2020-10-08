@@ -21,7 +21,7 @@ public class pivotToAngle implements Action{
 
     @Override
     public boolean isFinished() {
-        return (Math.abs(angleDiff) < 1 && Math.abs(speed) < 0.1);
+        return (Math.abs(angleDiff) < 1 && Math.abs(speed) < 0.3);
     }
 
     @Override
@@ -32,7 +32,14 @@ public class pivotToAngle implements Action{
     @Override
     public void update(){
       angleDiff = drive.getGyroAngle() - angle;
-      speed = (Math.abs(angleDiff) / 20.0) * 0.05 + 0.05;
+      
+      if (Math.abs(angleDiff) > 10){
+        speed = (Math.abs(angleDiff) / 9.0) * 0.05 + 0.05;
+      } else {
+        speed = 0.20;
+      }
+
+
       if (angleDiff > 0) {
         drive.autonTankDrive(-speed/2, speed/2);
       } else {

@@ -88,9 +88,10 @@ public class Shoot implements Action{
             turnVal = Math.max(-0.2, turnVal);
             turret.turn(turnVal);
         }*/
-
-        shooter.autoHood(vision_Y, 1);
+        
         shooter.spinToRPM(rpm);
+        shooter.autoHood(vision_Y, 1);
+        
         if(shooter.getLeftShooterRPM() > rpm){
             startShooting = true;
         }

@@ -218,16 +218,16 @@ public class Robot extends TimedRobot {
     intake.resetAdvanceBall();
     //turret.resetTurretPosition();
     table.getEntry("ledMode").setNumber(1);
+  }
+
+  public void disabledPeriodic() {
+    //table.getEntry("ledMode").setNumber(1);
     if(setDriveToCoast == true){
       driveTrain.setToCoast();
     }
     else {
       driveTrain.setToBrake();
     }
-  }
-
-  public void disabledPeriodic() {
-
   }
 
   /**
@@ -249,6 +249,7 @@ public class Robot extends TimedRobot {
     driveTrain.resetEncoders();
     driveTrain.zeroGyro();
     driveTrain.setToBrake();
+    setDriveToCoast = false;
 
     autoModes[0] = new Nothing();
     autoModes[1] = new MoveFromLine(driveTrain, turret, shooter, intake, table);
@@ -270,6 +271,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
       driveTrain.getDistance();
 
+      
       vision_X = tx.getDouble(0.0);
       vision_Y = ty.getDouble(0.0);
       vision_Area = ta.getDouble(0.0);
@@ -283,6 +285,7 @@ public class Robot extends TimedRobot {
         turnVal = Math.max(-0.2, turnVal);
         turret.turn(turnVal);
       }
+      
 
       if(intake.getFrontIndexSensorState() == false) {
         if(intake.getBackIndexSensorState() == true){
@@ -301,6 +304,7 @@ public class Robot extends TimedRobot {
     driveTrain.diffDrive.close();
     table.getEntry("ledMode").setNumber(1);
     driveTrain.setToBrake();
+    setDriveToCoast = false;
   }
   
   @Override
