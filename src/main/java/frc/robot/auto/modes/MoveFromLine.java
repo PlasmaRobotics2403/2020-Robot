@@ -52,7 +52,7 @@ public class MoveFromLine extends AutoMode {
 		runAction(new followTrajectory(0, driveTrain, intake));
 		runAction(new IntakeRoller(intake, false));
 		runAction(new followTrajectory(3, driveTrain, intake));
-		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 3, 18000));
+		runAction(new Shoot(turret, shooter, intake, table, 3, 18000));
 		//runAction(new Straight(0.2, 24, driveTrain, false, intake));
 		
 		DriverStation.reportWarning("Finished Action", false);

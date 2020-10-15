@@ -19,6 +19,7 @@ public class Turret {
     DigitalInput maxLimit;
 
     boolean isCalibrated;
+    boolean isTracking;
 
     public Turret (int TURRET_ROTATION_MOTOR_ID, int MIN_LIMIT_SWITCH_ID, int MAX_LIMIT_SWITCH_ID){
 
@@ -27,6 +28,7 @@ public class Turret {
         turretRotationMotor.setSelectedSensorPosition(6100);
 
         isCalibrated = false;
+        isTracking = true;
 
         limitCurrent(turretRotationMotor);
         turretRotationMotor.setInverted(false);
@@ -157,5 +159,13 @@ public class Turret {
 
     public void stopTurning() {
         turretRotationMotor.set(ControlMode.PercentOutput, 0);
+    }
+
+    public void setIsTracking(boolean tracking){
+        isTracking = tracking;
+    }
+
+    public boolean getIsTracking(){
+        return isTracking;
     }
 }

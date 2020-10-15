@@ -2,17 +2,18 @@ package frc.robot.auto.actions;
 
 import frc.robot.auto.util.Action;
 import frc.robot.Constants;
-import frc.robot.Drive;
 import frc.robot.Intake;
-import frc.robot.Shooter;
+import frc.robot.Turret;
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class gyroAngle implements Action{
-    Drive drive;
+public class Tracking implements Action{
+    Turret turret;
+    boolean tracking;
     double angle;
 
-    public gyroAngle(Drive drive, double angle){
-        this.drive = drive;
+    public Tracking(Turret turret, boolean tracking, double angle){
+        this.turret = turret;
+        this.tracking = tracking;
         this.angle = angle;
     }
 
@@ -23,7 +24,10 @@ public class gyroAngle implements Action{
 
     @Override
     public void start() {
-        drive.setGyroAngle(angle);
+        turret.setIsTracking(tracking);
+        if(tracking == false){
+            turret.setTurretPosition(angle);
+        }
     }
 
     @Override

@@ -276,14 +276,17 @@ public class Robot extends TimedRobot {
       vision_Y = ty.getDouble(0.0);
       vision_Area = ta.getDouble(0.0);
 
-      if (vision_Area == 0) {
-        //turret.turn(0);
+      visionTargetPosition();
+
+      if (!turret.getIsTracking() || vision_Area == 0) {
+        //turret.setTurretPosition(Constants.FORWARD_FACING);
       }
       else {
-        double turnVal = vision_X / 20;
+        /*double turnVal = vision_X / 20;
         turnVal = Math.min(turnVal, 0.2);
         turnVal = Math.max(-0.2, turnVal);
-        turret.turn(turnVal);
+        turret.turn(turnVal);*/
+        turret.setTurretPosition(turretTargetAngle - driveTrain.getGyroAngle());
       }
       
 
@@ -304,6 +307,7 @@ public class Robot extends TimedRobot {
     driveTrain.diffDrive.close();
     table.getEntry("ledMode").setNumber(1);
     driveTrain.setToBrake();
+    driveTrain.setGyroAngle(0);
     setDriveToCoast = false;
   }
   

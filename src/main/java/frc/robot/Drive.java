@@ -196,6 +196,10 @@ public class Drive extends SubsystemBase {
       gyroAngle = navX.getYaw();
       //gyroPitch = navX.getPitch();
     }
+
+    public void setGyroAngle(double angle) {
+      navX.setAngleAdjustment(angle);
+    }
   
     public double getGyroAngle() {
       updateGyro();

@@ -28,8 +28,6 @@ public class Shoot implements Action{
     boolean ballCounted;
     boolean neverEnd;
 
-    double angle;
-
     boolean timeCollected;
     double startTime;
     double finishTime;
@@ -38,14 +36,13 @@ public class Shoot implements Action{
 
     boolean startShooting;
 
-    public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double angle, double finishTime, double rpm){
+    public Shoot(Turret turret, Shooter shooter, Intake intake, NetworkTable table, double finishTime, double rpm){
         this.turret = turret;
         this.shooter = shooter;
         this.intake = intake;
         this.table = table;
         distance = 0;
         vision_Area = 0;
-        this.angle = angle;
         this.ballCount = intake.getAutonBallCount();
         this.timeCollected = false;
         this.finishTime = finishTime;

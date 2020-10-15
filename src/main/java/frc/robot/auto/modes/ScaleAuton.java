@@ -5,6 +5,7 @@ import frc.robot.auto.actions.SetTurretPosition;
 import frc.robot.auto.actions.Shoot;
 import frc.robot.auto.actions.SpinUp;
 import frc.robot.auto.actions.Straight;
+import frc.robot.auto.actions.Tracking;
 import frc.robot.auto.actions.followTrajectory;
 import frc.robot.auto.actions.gyroAngle;
 import frc.robot.auto.actions.pivotToAngle;
@@ -48,16 +49,18 @@ public class ScaleAuton extends AutoMode {
 	@Override
 	protected void routine() throws AutoModeEndedException {
 		DriverStation.reportWarning("started Action", false);
-		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 1, 15000));
+		runAction(new Shoot(turret, shooter, intake, table, 1, 15000));
 		runAction(new IntakeRoller(intake, true));
 		runAction(new SpinUp(shooter, 18000));
 		runAction(new followTrajectory(4, driveTrain, intake));
 		
 		runAction(new IntakeRoller(intake, false));
+		runAction(new Tracking(turret, false, 20));
 		runAction(new pivotToAngle(driveTrain, 180));
 		runAction(new IntakeRoller(intake, true));
 		runAction(new followTrajectory(7, driveTrain, intake));
-		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 2, 18000));
+		runAction(new Tracking(turret, true, 0));
+		runAction(new Shoot(turret, shooter, intake, table, 2, 18000));
 		
 		DriverStation.reportWarning("Finished Action", false);
 	}

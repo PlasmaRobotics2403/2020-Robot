@@ -47,14 +47,14 @@ public class SixBallAuto extends AutoMode {
 	@Override
 	protected void routine() throws AutoModeEndedException {
 		DriverStation.reportWarning("started Action", false);
-		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 1, 15000));
+		runAction(new Shoot(turret, shooter, intake, table, 1, 15000));
 		runAction(new IntakeRoller(intake, true));
 		runAction(new SpinUp(shooter, 18000));
 		runAction(new followTrajectory(4, driveTrain, intake));
 		runAction(new IntakeRoller(intake, false));
 		runAction(new followTrajectory(5, driveTrain, intake));
 		
-		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 2, 18000));
+		runAction(new Shoot(turret, shooter, intake, table, 2, 18000));
 		//
 		
 		DriverStation.reportWarning("Finished Action", false);

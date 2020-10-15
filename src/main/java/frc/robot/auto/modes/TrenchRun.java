@@ -47,14 +47,14 @@ public class TrenchRun extends AutoMode {
 	@Override
 	protected void routine() throws AutoModeEndedException {
 		DriverStation.reportWarning("started Action", false);
-		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 1, 15000));
+		runAction(new Shoot(turret, shooter, intake, table, 1, 15000));
 		runAction(new IntakeRoller(intake, true));
 		runAction(new SpinUp(shooter, 18000));
 		runAction(new followTrajectory(1, driveTrain, intake));
 		
 		runAction(new followTrajectory(2, driveTrain, intake));
 		runAction(new IntakeRoller(intake, false));
-		runAction(new Shoot(turret, shooter, intake, table, Constants.BACK_FACING - 30, 3, 18000));
+		runAction(new Shoot(turret, shooter, intake, table, 3, 18000));
 		//
 		
 		DriverStation.reportWarning("Finished Action", false);
