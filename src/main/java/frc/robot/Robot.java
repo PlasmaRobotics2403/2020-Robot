@@ -126,6 +126,7 @@ public class Robot extends TimedRobot {
     ts = table.getEntry("ts");
 
     table.getEntry("ledMode").setNumber(1);
+    table.getEntry("pipeline").setNumber(0);
 
     ballCounter = 0;
     ballCounted = false;
