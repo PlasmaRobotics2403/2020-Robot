@@ -8,7 +8,6 @@ import frc.robot.auto.actions.Straight;
 import frc.robot.auto.actions.Tracking;
 import frc.robot.auto.actions.followTrajectory;
 import frc.robot.auto.actions.gyroAngle;
-import frc.robot.auto.actions.pivotToAngle;
 import frc.robot.auto.util.AutoMode;
 import frc.robot.auto.util.AutoModeEndedException;
 import edu.wpi.first.networktables.NetworkTable;
@@ -27,14 +26,14 @@ import frc.robot.Turret;
 /**
  *
  */
-public class ScaleAuton extends AutoMode {
+public class TenBallAuto extends AutoMode {
 	Drive driveTrain;
 	Turret turret;
 	Shooter shooter;
 	Intake intake;
 	NetworkTable table;
 
-    public ScaleAuton(Drive driveTrain, Turret turret, Shooter shooter, Intake intake, NetworkTable table) {
+    public TenBallAuto(Drive driveTrain, Turret turret, Shooter shooter, Intake intake, NetworkTable table) {
 		this.driveTrain = driveTrain;
 		this.turret = turret;
 		this.shooter = shooter;
@@ -48,20 +47,15 @@ public class ScaleAuton extends AutoMode {
 	 */
 	@Override
 	protected void routine() throws AutoModeEndedException {
-		DriverStation.reportWarning("started Action", false);
-		runAction(new Shoot(turret, shooter, intake, table, 1, 15000));
-		runAction(new IntakeRoller(intake, true));
-		//runAction(new SpinUp(shooter, 18000));
-		runAction(new followTrajectory(4, driveTrain, intake));
+        DriverStation.reportWarning("started Action", false);
+        runAction(new Tracking(turret, false, 100));
+        runAction(new SpinUp(shooter, 18000));
+        runAction(new IntakeRoller(intake, true));
+        runAction(new followTrajectory(8, driveTrain, intake));
+        runAction(new Tracking(turret, true, 0));
+        runAction(new Shoot(turret, shooter, intake, table, 4, 18000));
+        runAction(new followTrajectory(9, driveTrain, intake));
 		
-		runAction(new IntakeRoller(intake, false));
-		runAction(new Tracking(turret, false, 20));
-		runAction(new pivotToAngle(driveTrain, 180));
-		runAction(new IntakeRoller(intake, true));
-		runAction(new SpinUp(shooter, 18000));
-		runAction(new followTrajectory(7, driveTrain, intake));
-		runAction(new Tracking(turret, true, 0));
-		runAction(new Shoot(turret, shooter, intake, table, 4, 18000));
 		
 		DriverStation.reportWarning("Finished Action", false);
 	}

@@ -93,7 +93,7 @@ public class Shoot implements Action{
             startShooting = true;
         }
         
-        if(startShooting == true && shooter.getHoodPosition() >= shooter.getTargetHoodPosition() * 0.95 && vision_X > -0.5 && vision_X < 0.5) {
+        if(startShooting == true && shooter.getHoodPosition() >= shooter.getTargetHoodPosition() * 0.95 && vision_X > -0.4 && vision_X < 0.4) {
             if(timeCollected == false){
                 startTime = Timer.getFPGATimestamp();
                 timeCollected = true;
