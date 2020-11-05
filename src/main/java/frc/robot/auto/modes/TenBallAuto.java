@@ -53,8 +53,14 @@ public class TenBallAuto extends AutoMode {
         runAction(new IntakeRoller(intake, true));
         runAction(new followTrajectory(8, driveTrain, intake));
         runAction(new Tracking(turret, true, 0));
-        runAction(new Shoot(turret, shooter, intake, table, 4, 18000));
-        runAction(new followTrajectory(9, driveTrain, intake));
+		runAction(new Shoot(turret, shooter, intake, table, 4, 18000));
+		runAction(new Tracking(turret, false, 160));
+		runAction(new followTrajectory(9, driveTrain, intake));
+		runAction(new followTrajectory(10, driveTrain, intake));
+		runAction(new IntakeRoller(intake, false));
+		runAction(new Tracking(turret, true, 0));
+		runAction(new followTrajectory(11, driveTrain, intake));
+		runAction(new Shoot(turret, shooter, intake, table, 4, 18000));
 		
 		
 		DriverStation.reportWarning("Finished Action", false);

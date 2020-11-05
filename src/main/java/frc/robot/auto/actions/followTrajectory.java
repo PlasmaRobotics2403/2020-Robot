@@ -44,6 +44,8 @@ public class followTrajectory implements Action {
 	Trajectory trajectory7;
 	Trajectory trajectory8;
 	Trajectory trajectory9;
+	Trajectory trajectory10;
+	Trajectory trajectory11;
 	TrajectoryConfig config0;
 	TrajectoryConfig config1;
 	TrajectoryConfig config2;
@@ -54,6 +56,8 @@ public class followTrajectory implements Action {
 	TrajectoryConfig config7;
 	TrajectoryConfig config8;
 	TrajectoryConfig config9;
+	TrajectoryConfig config10;
+	TrajectoryConfig config11;
 
 	Trajectory[] trajectoryArray;
 	int trajectoryNumber;
@@ -224,12 +228,46 @@ public class followTrajectory implements Action {
                 new Translation2d(-1, 0) //1.3, 1.8
             ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(-2, 0, new Rotation2d(Math.toRadians(62))),
+            new Pose2d(-1.7, 0, new Rotation2d(Math.toRadians(62))),
             // Pass config
             config9
 		);
+
+		config10 = new TrajectoryConfig(1.5, 1.5)
+								.setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE))
+								.addConstraint(new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(.277, 1.78, .275), new DifferentialDriveKinematics(Constants.WHEEL_BASE), 11));
+								
+		trajectory10 = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(
+                new Translation2d(2.3, 0) //1.3, 1.8
+            ),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(4.6, 0, new Rotation2d(Math.toRadians(0))),
+            // Pass config
+            config10
+		);
+
+		config11 = new TrajectoryConfig(3, 1.5)
+								.setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE))
+								.addConstraint(new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(.277, 1.78, .275), new DifferentialDriveKinematics(Constants.WHEEL_BASE), 11))
+								.setReversed(true);
+		trajectory11 = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(
+                new Translation2d(-3.5, 0)
+            ),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(-5.5, -1, new Rotation2d(Math.toRadians(0))),
+            // Pass config
+            config11
+		);
 		
-		trajectoryArray = new Trajectory[10];
+		trajectoryArray = new Trajectory[20];
 		trajectoryArray[0] = trajectory0;
 		trajectoryArray[1] = trajectory1;
 		trajectoryArray[2] = trajectory2;
@@ -240,6 +278,8 @@ public class followTrajectory implements Action {
 		trajectoryArray[7] = trajectory7;
 		trajectoryArray[8] = trajectory8;
 		trajectoryArray[9] = trajectory9;
+		trajectoryArray[10] = trajectory10;
+		trajectoryArray[11] = trajectory11;
 		DriverStation.reportWarning("got Trajectory", false);
 	}
 
