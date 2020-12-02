@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Climb {
     TalonSRX leftClimbMotor;
     VictorSPX rightClimbMotor;
-
+    
     Solenoid climbLatch;
 
     Climb(int left_climb_motor_ID, int right_climb_motor_ID, int climb_latch_ID) {
