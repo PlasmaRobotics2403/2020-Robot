@@ -425,7 +425,7 @@ public class Robot extends TimedRobot {
       }
       climb.setPosition(climbPosition);
     }
-    else if(joystick.dPad.getPOV() == 180 && climb.getLeftEncoderValue() < 50250) {
+    else if(joystick.dPad.getPOV() == 180 && climb.getLeftEncoderValue()p < 50250) {
       climb.spoolCable(Constants.MAX_SPOOL_SPEED);
     }
     else {
