@@ -21,8 +21,8 @@ public class Climb {
         leftClimbMotor.setInverted(false);
         rightClimbMotor.setInverted(true);
 
-        //limitCurrent(leftClimbMotor);
-        //limitCurrent(rightClimbMotor);
+        limitCurrent(leftClimbMotor);
+        limitCurrent(rightClimbMotor);
     };
 
     void spoolCable(double speed) {
