@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -22,8 +23,9 @@ public class Climb {
         leftClimbMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         leftClimbMotor.setSelectedSensorPosition(0, 0, 0);
 
-        leftClimbMotor.configClosedloopRamp(0, 300);
-        leftClimbMotor.configOpenloopRamp(0, 300);
+        leftClimbMotor.configClosedloopRamp(0.5, 300);
+        leftClimbMotor.configOpenloopRamp(0.5, 300);
+        
 
         leftClimbMotor.config_kF(0, 0.0, 300); //feed forward speed
         leftClimbMotor.config_kP(0, .1, 300); // used to get close to position
@@ -33,6 +35,9 @@ public class Climb {
 
         leftClimbMotor.setInverted(false);
         rightClimbMotor.setInverted(true);
+
+        leftClimbMotor.setNeutralMode(NeutralMode.Brake);
+        rightClimbMotor.setNeutralMode(NeutralMode.Brake);
 
         limitCurrent(leftClimbMotor);
     }
@@ -59,6 +64,11 @@ public class Climb {
     public void setPosition(int position){
         leftClimbMotor.set(ControlMode.Position, position);
         rightClimbMotor.set(ControlMode.Follower, leftClimbMotor.getDeviceID());
+    }
+
+    public void setRampRate(double secondsFromNeutralToFull){
+        leftClimbMotor.configClosedloopRamp(secondsFromNeutralToFull, 300);
+        leftClimbMotor.configOpenloopRamp(secondsFromNeutralToFull, 300);
     }
 
     public void limitCurrent(TalonSRX talon) {

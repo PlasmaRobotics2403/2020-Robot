@@ -432,7 +432,7 @@ public class Robot extends TimedRobot {
       }
       climb.setPosition(climbPosition);
     }
-    else if(joystick.dPad.getPOV() == 180 && climb.getLeftEncoderValue() < 50250) {
+    else if(joystick.dPad.getPOV() == 180 && climb.getLeftEncoderValue() < 45000) {
       climb.spoolCable(Constants.MAX_SPOOL_SPEED);
     }
     else {
@@ -507,6 +507,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    if(joystick.B.isPressed() && climb.getLeftEncoderValue() > 0){
+      climb.spoolCable(-0.3);
+    }
+    else {
+      climb.spoolCable(0);
+    }
     /*if(joystick.B.isPressed()) {
         shooter.shootRight(1);
     }
