@@ -77,6 +77,10 @@ public class Robot extends TimedRobot {
 
   boolean setDriveToCoast;
 
+  int climbIterator;
+  int climbPosition;
+  boolean climbRecorded;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -143,6 +147,10 @@ public class Robot extends TimedRobot {
     autoModeSelection = 0;
     setDriveToCoast = false;
 
+    climbIterator = 0;
+    climbPosition = 0;
+    climbRecorded = false;
+
     intake.retractForeBar();
     driveTrain.setToCoast();
   }
@@ -206,6 +214,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("back sensor state", intake.getBackIndexSensorState());
     intake.displayIndexPosition();
     SmartDashboard.putNumber("ball count", ballCounter);
+
+    SmartDashboard.putNumber("climb encoder value", climb.getLeftEncoderValue());
+    SmartDashboard.putNumber("climb position", climbPosition);
 
     driveTrain.updateOdometry();
   }
@@ -401,11 +412,32 @@ public class Robot extends TimedRobot {
       climb.releaseLatch();
     }
 
-    if(joystick.dPad.getPOV() == 180) {
+    if(joystick.dPad.getPOV() == 90) {
+  
+     if(climbRecorded == false){
+        climbIterator += 1;
+        climbRecorded = true;
+      }
+
+      switch(climbIterator){
+        case 0:
+          climbPosition = 0;
+          break;
+        case 1:
+          climbPosition = 5400;
+          break;
+        case 2:
+          climbPosition = 12410;
+          break;
+      }
+      climb.setPosition(climbPosition);
+    }
+    else if(joystick.dPad.getPOV() == 180 && climb.getLeftEncoderValue()p < 50250) {
       climb.spoolCable(Constants.MAX_SPOOL_SPEED);
     }
     else {
       climb.spoolCable(0);
+      climbRecorded = false;
     }
   }
 
