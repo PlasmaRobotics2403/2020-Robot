@@ -35,8 +35,7 @@ public class Climb {
         rightClimbMotor.setInverted(true);
 
         limitCurrent(leftClimbMotor);
-        limitCurrent(rightClimbMotor);
-    };
+    }
 
     void spoolCable(double speed) {
         double spoolSpeed = speed * Constants.MAX_SPOOL_SPEED;
