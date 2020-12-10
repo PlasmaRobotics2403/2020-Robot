@@ -300,7 +300,7 @@ public class Robot extends TimedRobot {
         turnVal = Math.min(turnVal, 0.2);
         turnVal = Math.max(-0.2, turnVal);
         turret.turn(turnVal);*/
-        turret.setTurretPosition(turretTargetAngle - driveTrain.getGyroAngle());
+        turret.setTurretPosition(turretTargetAngle - driveTrain.getGyroAngle() - (turret.getTurretAngle() % 180) / 50);
       }
       
 
@@ -460,7 +460,7 @@ public class Robot extends TimedRobot {
       }
       else{
 
-        turret.setTurretPosition(turretTargetAngle - driveTrain.getGyroAngle());
+        turret.setTurretPosition(turretTargetAngle - driveTrain.getGyroAngle() - (turret.getTurretAngle() % 180) / 50);
       }
     }
     else{
