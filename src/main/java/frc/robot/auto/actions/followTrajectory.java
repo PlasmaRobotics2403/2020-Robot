@@ -23,14 +23,12 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
 import frc.robot.Drive;
-import frc.robot.Intake;
 import frc.robot.auto.util.Action;
 import frc.robot.auto.util.GenerateTrajectory;
 
 public class followTrajectory implements Action {
 
 	Drive drive;
-	Intake intake;
     GenerateTrajectory generateTrajectory;
 
 	RamseteCommand ramsete;
@@ -64,10 +62,9 @@ public class followTrajectory implements Action {
 	
 	int i = 0;
 	
-	public followTrajectory(int trajectoryNumber, final Drive drive, final Intake intake) {
+	public followTrajectory(int trajectoryNumber, final Drive drive) {
 		this.trajectoryNumber = trajectoryNumber;
-		this.drive = drive;  
-		this.intake = intake; 
+		this.drive = drive;   
 		DriverStation.reportWarning("getting trajectory", false);
 		config0 = new TrajectoryConfig(2.5, 1.75)
 								.setKinematics(new DifferentialDriveKinematics(Constants.WHEEL_BASE))
